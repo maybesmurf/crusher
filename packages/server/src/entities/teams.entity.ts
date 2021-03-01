@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Users } from './users.entity';
 // import { Projects } from './Projects';
 // import { UserTeamRoles } from './UserTeamRoles';
 // import { Users } from './Users';
@@ -46,6 +47,6 @@ export class Teams {
   // @OneToMany(() => UserTeamRoles, (userTeamRoles) => userTeamRoles.team)
   // userTeamRoles: UserTeamRoles[];
   //
-  // @OneToMany(() => Users, (users) => users.team)
-  // users: Users[];
+  @OneToMany(() => Users, (users) => users.team)
+  users: Users[];
 }

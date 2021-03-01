@@ -420,7 +420,7 @@
       }
 
       // W4. A single European separator between two European numbers
-      // changes to a European number. A single common separator between
+      // changes to a European number. A single core separator between
       // two numbers of the same type changes to that type.
       for (var i$3 = 1, prev$1 = types[0]; i$3 < len - 1; ++i$3) {
         var type$2 = types[i$3];

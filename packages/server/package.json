@@ -26,6 +26,8 @@
     "@nestjs/platform-express": "^7.6.13",
     "@nestjs/typeorm": "^7.1.5",
     "mysql2": "^2.2.5",
+    "passport": "^0.4.1",
+    "passport-google-oauth": "^2.0.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.6",

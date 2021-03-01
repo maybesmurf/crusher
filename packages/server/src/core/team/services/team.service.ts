@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Teams } from '../../entities/teams.entity';
+import { Teams } from '../../../entities/teams.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 

@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from './user/user.module';
+import { UserModule } from './core/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Teams } from './entities/teams.entity';
-import { TeamModule } from './team/team.module';
+import { TeamModule } from './core/team/team.module';
+import { Users } from './entities/users.entity';
+import { AuthModule } from './core/auth/auth.module';
 
 @Module({
   imports: [
@@ -13,9 +15,10 @@ import { TeamModule } from './team/team.module';
       username: 'remote',
       password: 'password',
       database: 'crusher',
-      entities: [Teams],
+      entities: [Teams, Users],
     }),
     UserModule,
+    AuthModule,
     TeamModule,
   ],
 })
