@@ -21,7 +21,7 @@ export default class TeamService {
 
 		// Only 1 team should be allowed
 		if (!user.team_id) {
-			const team = await this.dbManager.insertData("INSERT INTO team SET ?", {
+			const team = await this.dbManager.insertData("INSERT INTO teams SET ?", {
 				name: teamName,
 				team_email: user.email,
 				tier: TierPlan.FREE,
@@ -39,13 +39,13 @@ export default class TeamService {
 	}
 
 	async getTeamInfo(teamId: string): Promise<iUser> {
-		return await this.dbManager.fetchSingleRow("SELECT * from team WHERE id = ?", [teamId]);
+		return await this.dbManager.fetchSingleRow("SELECT * from teams WHERE id = ?", [teamId]);
 	}
 
 	async getMembersInTeam(teamId: number): Promise<Array<iMemberInfoResponse>> {
 		return this.dbManager
 			.fetchData(
-				"SELECT users.*, user_team_roles.role role FROM users, team, user_team_roles WHERE users.team_id = team.id AND team.id = ? AND user_team_roles.user_id = users.id AND user_team_roles.team_id = ?",
+				"SELECT users.*, user_team_roles.role role FROM users, teams, user_team_roles WHERE users.team_id = team.id AND team.id = ? AND user_team_roles.user_id = users.id AND user_team_roles.team_id = ?",
 				[teamId, teamId],
 			)
 			.then((res: Array<any>) => {

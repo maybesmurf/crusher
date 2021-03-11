@@ -29,14 +29,14 @@ export default class TestService {
 
 	async findMembersOfProject(projectId: number) {
 		return this.dbManager.fetchData(
-			"SELECT users.* FROM projects, users, team WHERE projects.id = ? AND projects.team_id = team.id AND users.team_id = team.id",
+			"SELECT users.* FROM projects, users, teams WHERE projects.id = ? AND projects.team_id = team.id AND users.team_id = team.id",
 			[projectId],
 		);
 	}
 
 	async findProjectMembersOfTest(testId: number) {
 		return this.dbManager.fetchData(
-			"SELECT users.* FROM tests, projects, users, team WHERE tests.id = ? AND projects.id = tests.project_id AND projects.team_id = team.id AND users.team_id = team.id",
+			"SELECT users.* FROM tests, projects, users, teams WHERE tests.id = ? AND projects.id = tests.project_id AND projects.team_id = team.id AND users.team_id = team.id",
 			[testId],
 		);
 	}

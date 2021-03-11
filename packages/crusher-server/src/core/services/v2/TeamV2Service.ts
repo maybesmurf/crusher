@@ -13,7 +13,7 @@ export class TeamV2Service {
 	}
 
 	async createTeam(userId: number, teamName: string, teamEmail: string, tier: TierPlan, stripeCustomerId: string): Promise<number> {
-		const teamRecord = await this.dbManager.insertData("INSERT INTO team SET ?", {
+		const teamRecord = await this.dbManager.insertData("INSERT INTO teams SET ?", {
 			name: teamName,
 			team_email: teamEmail,
 			tier: TierPlan.FREE,
