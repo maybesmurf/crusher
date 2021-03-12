@@ -24,7 +24,7 @@ async function bootstrap() {
   console.log('-------------------------------------------------');
   console.log(`Application is running on: ${appUrl}`);
   console.log('-------------------------------------------------');
-  console.log(`API Docs is available on: ${appUrl}/api`)
+  console.log(`API Docs are available on: ${appUrl}/api`)
   console.log('-------------------------------------------------');
 }
 

@@ -1,12 +1,14 @@
 import { Controller, Get } from '@nestjs/common';
 import { UserService } from '../services/user.service';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('users')
+@ApiTags("user")
+@Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Get('/hello')
-  sayHello(): string {
+  @Get('/info')
+  getUserInfo(): string {
     return this.userService.sayHello();
   }
 }
