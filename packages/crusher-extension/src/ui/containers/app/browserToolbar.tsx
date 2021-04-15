@@ -20,6 +20,8 @@ import { AdvancedURL } from "../../../utils/url";
 import { generateCrusherExtensionUrl } from "../../../../../crusher-shared/utils/extension";
 import { OnboardingManager } from "./onboardingManager";
 import { Conditional } from "../../components/conditional";
+import { useSelector } from "react-redux";
+import { getAutoRecorderState } from "../../../redux/selectors/recorder";
 
 interface iBrowserToolbarProps {
 	initialUrl?: string;
@@ -45,6 +47,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 	const [selectedDevice] = useState(
 		AdvancedURL.getDeviceFromCrusherExtensionUrl(window.location.href).id,
 	);
+	const isAutoHoverOn = useSelector(getAutoRecorderState);
 
 	const handleAddressBarUrlChange = (event: ChangeEvent) => {
 		setUrl((event.target as any).value);
@@ -106,7 +109,11 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 				<div style={authDetectModeToggleContainerStyle}>
 					<div style={autoDetectModeToggleHeadingStyle}>Auto Detect:</div>
 					<label className="switch">
-						<input type="checkbox" onChange={handleAutoDetectModeToggle} />
+						<input
+							type="checkbox"
+							defaultChecked={isAutoHoverOn}
+							onChange={handleAutoDetectModeToggle}
+						/>
 						<span className="slider round"></span>
 					</label>
 				</div>

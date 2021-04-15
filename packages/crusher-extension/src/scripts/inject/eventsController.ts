@@ -52,7 +52,10 @@ export default class EventsController {
 					type: event_type,
 					payload: {
 						selectors: selectors,
-						meta: { value },
+						meta: {
+							value,
+							innerHTML: document.body.innerHTML,
+						},
 					},
 					url: window.location.href,
 				} as iAction,

@@ -95,6 +95,23 @@ function handleRecordAction(action: iAction) {
 		return;
 	}
 
+	const Window = window as any;
+	if (
+		Window.electron &&
+		Window.electron.processSelector &&
+		action.payload.selectors
+	) {
+		Window.electron.processSelector(
+			action.payload.selectors[0].value,
+			action.payload.meta.innerHTML,
+			1,
+		);
+	}
+
+	if (action.payload.meta.innerHTML) {
+		delete action.payload.meta.innerHTML;
+	}
+
 	switch (type) {
 		case ACTIONS_IN_TEST.NAVIGATE_URL: {
 			const hasInitialNavigationActionRegistered =

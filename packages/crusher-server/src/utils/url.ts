@@ -27,5 +27,12 @@ export function extractHostname(url) {
 	//find & remove "?"
 	hostname = hostname.split("?")[0];
 
+	if (
+		/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(
+			hostname,
+		)
+	) {
+		return hostname;
+	}
 	return hostname.split(".").slice(-2).join(".");
 }
