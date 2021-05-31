@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "compile": "rm -rf out/dist/resources/app/build && tsc",
-    "start": "yarn compile && NODE_ENV=testing  /home/himanshu/Downloads/dist/electron .",
+    "start": "yarn compile && NODE_ENV=testing  ./base/linux/dist/electron .",
     "build:release:linux": "yarn compile && bash scripts/build-and-copy-chrome.sh && bash scripts/dist/build-linux-dist.sh",
     "build:release:mac": "yarn compile && bash scripts/build-and-copy-chrome.sh && bash scripts/dist/build-darwin-dist.sh",
     "build:release:windows": "yarn compile && bash scripts/build-and-copy-chrome.sh && bash scripts/dist/build-windows-dist.sh",
