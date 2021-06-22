@@ -37,12 +37,11 @@ const bookDescription = css`
 	font-size: 0.82rem;
 `;
 
-function CrusherSelectBox({ checked, setChecked, text, description }) {
-	const handleChange = (event) => {
-		setChecked(event.target.checked);
-	};
-
-	return (
+function CrusherSelectBox({
+    text,
+    description
+}) {
+    return (
 		<div css={SelectBox}>
 			<div>
 				{/*<Checkbox defaultChecked color="primary" checked={checked} onChange={handleChange} inputProps={{ "aria-label": "secondary checkbox" }} />*/}
@@ -102,7 +101,7 @@ function GetStartedScreem() {
 	return BookMeetingScreen();
 }
 
-GetStartedScreem.getInitialProps = (ctx) => {
+GetStartedScreem.getInitialProps = () => {
 	return {};
 };
 
