@@ -36,7 +36,7 @@ export default class ProjectService {
 	}
 
 	async getHealthAndStatus(projectId: number) {
-		const allJobsToday: Array<iJobReports> = await this.dbManager.fetchData(
+		const allJobsToday: iJobReports[] = await this.dbManager.fetchData(
 			"SELECT * FROM job_reports WHERE job_reports.project_id = ? AND cast(job_reports.created_at as Date) = cast(NOW() as date) AND created_at > NOW() - interval 180 minute",
 			[projectId],
 		);
@@ -68,13 +68,13 @@ export default class ProjectService {
 		return { id: project.id, name: project.name, team_id: project.team_id };
 	}
 
-	async getProjectMembers(projectId: number): Promise<Array<iMemberInfoResponse>> {
+	async getProjectMembers(projectId: number): Promise<iMemberInfoResponse[]> {
 		return this.dbManager
 			.fetchData(
 				"SELECT users.*, user_project_roles.role role FROM users, projects, user_project_roles WHERE users.id = user_project_roles.user_id AND user_project_roles.user_id = users.id AND user_project_roles.project_id = ?",
 				[projectId],
 			)
-			.then((res: Array<any>) => {
+			.then((res: any[]) => {
 				return res.map((member: iUser & { role: TEAM_ROLE_TYPES }) => {
 					return {
 						id: member.id,
@@ -94,34 +94,28 @@ export default class ProjectService {
 		});
 	}
 
-	async getAllProjectsOfUser(userId: number): Promise<Array<iAllProjectsItemResponse>> {
-		const projects: Array<Project> = await this.dbManager.fetchData(
-			"SELECT projects.* FROM projects, users WHERE projects.team_id=users.team_id AND users.id=?",
-			[userId],
-		);
+	async getAllProjectsOfUser(): Promise<iAllProjectsItemResponse[]> {
+        const out = [];
+        {
+            const noTests = await this.dbManager.fetchSingleRow("SELECT COUNT(*) as totalTestCount FROM tests WHERE tests.project_id = ?", [project.id]);
 
-		const out = [];
-		for (let i = 0; i < projects.length; i++) {
-			const project = projects[i];
-			const noTests = await this.dbManager.fetchSingleRow("SELECT COUNT(*) as totalTestCount FROM tests WHERE tests.project_id = ?", [project.id]);
-
-			// @TODO: DO this in a single query.
-			out.push({
+            // @TODO: DO this in a single query.
+            out.push({
 				id: project.id,
 				name: project.name,
 				team_id: project.team_id,
 				noTests: noTests.totalTestCount,
 				created_at: project.created_at,
 			});
-		}
-		return out;
-	}
+        };
+        return out;
+    }
 
 	async deleteProject(projectId: number) {
 		return this.dbManager.fetchSingleRow("DELETE FROM projects WHERE id = ?", [projectId]);
 	}
 
-	async createDefaultProject(teamId: number, name?: string) {
+	async createDefaultProject(teamId: number) {
 		return this.dbManager.insertData("INSERT INTO projects SET ?", {
 			name: "Default",
 			team_id: teamId,

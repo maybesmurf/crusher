@@ -5,12 +5,12 @@ export function resolvePathToBackendURI(path: string) {
 }
 
 export function appendParamsToURI(uri: string, params) {
-	const currentURL = new URL(uri);
-	Object.keys(params).forEach((paramKey) => {
+    const currentURL = new URL(uri);
+    for (const paramKey of Object.keys(params)) {
 		currentURL.searchParams.append(paramKey, params[paramKey]);
-	});
+	}
 
-	return currentURL.href;
+    return currentURL.href;
 }
 
 export function checkIfAbsoluteURI(uri: string) {

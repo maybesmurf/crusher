@@ -37,7 +37,7 @@ export class CreateProjectsController {
 					projectId: project.insertId,
 				};
 			})
-			.catch((err) => {
+			.catch(() => {
 				return { status: RESPONSE_STATUS.PROJECT_CREATION_FAILED };
 			});
 	}

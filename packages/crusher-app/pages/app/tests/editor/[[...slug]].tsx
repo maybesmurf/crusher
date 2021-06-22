@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useRef, useState} from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { iPageContext } from "@interfaces/pageContext";
 import { checkIfUserLoggedIn, getUserInfo } from "@redux/stateUtils/user";
 import { redirectToFrontendPath } from "@utils/router";
@@ -10,7 +10,7 @@ import { withSidebarLayout } from "@hoc/withSidebarLayout";
 import { markTestAborted, recordLiveLogs, saveTestMetaInfo } from "@redux/actions/tests";
 import { iTestMetaInfo } from "@interfaces/testMetaInfo";
 import { useSelector } from "react-redux";
-import {getTestMetaInfo} from "@redux/stateUtils/tests";
+import { getTestMetaInfo } from "@redux/stateUtils/tests";
 import { CodeGenerator } from "@code-generator/src/generator";
 import { getSelectedProject } from "@redux/stateUtils/projects";
 import { iDraft } from "@crusher-shared/types/db/draft";
@@ -39,24 +39,22 @@ function checkDraftStatusAgainAndAgain(draftId: number, logsAfter = 0) {
 			if (test.status === InstanceStatus.ABORTED || test.status === InstanceStatus.TIMEOUT || test.status === InstanceStatus.FINISHED) {
 				return store.dispatch(recordLiveLogs(logs!));
 			} else {
-				const lastCreatedAt =
-					logs?.length
-						? logs.reduce((prev: any, current: any) => {
-								const createdDate = new Date(current.createdAt);
-								return createdDate > prev ? createdDate : prev;
-						  }, new Date(0))
-						: logsAfter;
-				store.dispatch(recordLiveLogs(logs!));
-				return checkDraftStatusAgainAndAgain(draftId, lastCreatedAt);
-			}
-		} else {
-			const lastCreatedAt =
-				logs?.length
+				const lastCreatedAt = logs?.length
 					? logs.reduce((prev: any, current: any) => {
 							const createdDate = new Date(current.createdAt);
 							return createdDate > prev ? createdDate : prev;
 					  }, new Date(0))
 					: logsAfter;
+				store.dispatch(recordLiveLogs(logs!));
+				return checkDraftStatusAgainAndAgain(draftId, lastCreatedAt);
+			}
+		} else {
+			const lastCreatedAt = logs?.length
+				? logs.reduce((prev: any, current: any) => {
+						const createdDate = new Date(current.createdAt);
+						return createdDate > prev ? createdDate : prev;
+				  }, new Date(0))
+				: logsAfter;
 
 			return checkDraftStatusAgainAndAgain(draftId, lastCreatedAt);
 		}
@@ -69,15 +67,15 @@ interface iTestEditorProps {
 }
 
 const TestEditor = (props: iTestEditorProps) => {
-    const { metaInfo } = props;
-    const [testName] = useState("");
+	const { metaInfo } = props;
+	const [testName] = useState("");
 
-    const userInfo = useSelector(getUserInfo);
-    const testInfo = useSelector(getTestMetaInfo);
-    const selectedProjectId = useSelector(getSelectedProject);
-    const authCheckerInterval = useRef(null as any);
+	const userInfo = useSelector(getUserInfo);
+	const testInfo = useSelector(getTestMetaInfo);
+	const selectedProjectId = useSelector(getSelectedProject);
+	const authCheckerInterval = useRef(null as any);
 
-    const handleRunTest = useCallback(
+	const handleRunTest = useCallback(
 		function () {
 			if (!testInfo.id) {
 				const code = new CodeGenerator({
@@ -112,7 +110,7 @@ const TestEditor = (props: iTestEditorProps) => {
 		[testInfo.actions],
 	);
 
-    useMemo(() => {
+	useMemo(() => {
 		if (testInfo.testType === EDITOR_TEST_TYPE.SAVED_DRAFT && testInfo.id) {
 			checkDraftStatusAgainAndAgain(testInfo.id).then((res: any) => {
 				console.log(res);
@@ -120,11 +118,11 @@ const TestEditor = (props: iTestEditorProps) => {
 		}
 	}, [testInfo.testType, testInfo.id]);
 
-    useMemo(() => {
+	useMemo(() => {
 		handleRunTest();
 	}, [testInfo.actions]);
 
-    useMemo(() => {
+	useMemo(() => {
 		if (!userInfo) {
 			authCheckerInterval.current = setInterval(() => {
 				if (Cookies.get("isLoggedIn") === "true") {
@@ -136,8 +134,8 @@ const TestEditor = (props: iTestEditorProps) => {
 		}
 	}, [userInfo]);
 
-    return (
-        <div css={containerCSS}>
+	return (
+		<div css={containerCSS}>
 			<AuthModal isOpen={!!!userInfo} />
 			<div css={centeredContainerCSS}>
 				<img src={"/svg/loadingElipsis.svg"} css={loadingCSS} />
@@ -190,7 +188,7 @@ const TestEditor = (props: iTestEditorProps) => {
 				{/*/>*/}
 			</div>
 		</div>
-    );
+	);
 };
 
 const loadingCSS = css`
@@ -218,7 +216,13 @@ const centeredContainerCSS = css`
 	text-align: center;
 `;
 
-const parseTestMetaInfo = async (req: NextApiRequest, res: NextApiResponse, testType: EDITOR_TEST_TYPE, id: number, headers: any = null): Promise<iTestMetaInfo | null> => {
+const parseTestMetaInfo = async (
+	req: NextApiRequest,
+	res: NextApiResponse,
+	testType: EDITOR_TEST_TYPE,
+	id: number,
+	headers: any = null,
+): Promise<iTestMetaInfo | null> => {
 	const postDataFromReq = await parse(req);
 	const isComingFromCrusherExtension = postDataFromReq?.events;
 	const encodedSavedPostTestData = cookies!.testPostData;
@@ -228,11 +232,11 @@ const parseTestMetaInfo = async (req: NextApiRequest, res: NextApiResponse, test
 
 	switch (testType) {
 		case EDITOR_TEST_TYPE.UNSAVED:
-            if (!postData.events && !postData.totalTime) {
+			if (!postData.events && !postData.totalTime) {
 				throw new Error("No recorded actions passed to run test for");
 			}
 
-            return {
+			return {
 				actions: JSON.parse(unescape(postData.events)),
 				testType: testType,
 				id: id,
@@ -264,12 +268,7 @@ const parseTestMetaInfo = async (req: NextApiRequest, res: NextApiResponse, test
 };
 
 TestEditor.getInitialProps = async (ctx: iPageContext) => {
-	const {
-        query,
-        metaInfo,
-        res,
-        store
-    } = ctx;
+	const { query, metaInfo, res, store } = ctx;
 
 	const { slug } = query;
 	if (!slug) {
@@ -297,8 +296,8 @@ TestEditor.getInitialProps = async (ctx: iPageContext) => {
 			metaInfo: testMetaInfo,
 		};
 	} catch (err) {
-        throw err;
-    }
+		throw err;
+	}
 };
 
 export default withSidebarLayout(TestEditor);

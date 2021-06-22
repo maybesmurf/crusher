@@ -1,28 +1,16 @@
-import { Authorized, Body, CurrentUser, Get, InternalServerError, JsonController, OnNull, Post, QueryParam, QueryParams, Req, Res } from "routing-controllers";
+import {Authorized, Body, CurrentUser, Get, InternalServerError, JsonController, OnNull, Post, QueryParams, Req, Res} from "routing-controllers";
 import { Inject, Service } from "typedi";
 import UserService from "../../core/services/UserService";
-import { appendParamsToURI, resolvePathToBackendURI, resolvePathToFrontendURI } from "../../core/utils/uri";
+import {resolvePathToFrontendURI} from "../../core/utils/uri";
 import GoogleAPIService from "../../core/services/GoogleAPIService";
-import { EMAIL_VERIFIED_WITH_VERIFICATION_CODE, NO_TEAM_JOINED, SIGNED_UP_WITHOUT_JOINING_TEAM, USER_NOT_REGISTERED, USER_REGISTERED } from "../../constants";
+import {EMAIL_VERIFIED_WITH_VERIFICATION_CODE, NO_TEAM_JOINED, USER_NOT_REGISTERED, USER_REGISTERED} from "../../constants";
 import TeamService from "../../core/services/TeamService";
-import { EmailManager } from "../../core/manager/EmailManager";
-import { decodeToken, generateToken, generateVerificationCode } from "../../core/utils/auth";
+import {decodeToken, generateToken} from "../../core/utils/auth";
 import ProjectService from "../../core/services/ProjectService";
 import { clearUserAuthorizationCookies, setUserAuthorizationCookies } from "../../utils/cookies";
 import { Logger } from "../../utils/logger";
-import { generateId } from "../../core/utils/helper";
 import { iUserInfoResponse } from "@crusher-shared/types/response/userInfoResponse";
-import { iSignupUserRequest } from "@crusher-shared/types/request/signupUserRequest";
 import { InviteMembersService } from "../../core/services/mongo/inviteMembers";
-import { iProjectInviteReferral } from "@crusher-shared/types/mongo/projectInviteReferral";
-
-const { google } = require("googleapis");
-
-const oauth2Client = new google.auth.OAuth2(
-	process.env.GOOGLE_CLIENT_ID,
-	process.env.GOOGLE_CLIENT_SECRET,
-	resolvePathToBackendURI("/user/authenticate/google/callback"),
-);
 
 @Service()
 @JsonController("/user")
@@ -62,7 +50,7 @@ export class UserController {
 	}
 
 	@Get("/getStatus")
-	async getStatus(@CurrentUser({ required: false }) user, @Res() res) {
+    async getStatus(@CurrentUser({ required: false }) user) {
 		const { user_id } = user;
 		if (!user_id) {
 			return { status: USER_NOT_REGISTERED, data: user };
@@ -83,72 +71,68 @@ export class UserController {
 					user_meta: userMeta,
 				};
 			})
-			.catch((err) => {
+			.catch(() => {
 				return { status: USER_NOT_REGISTERED };
 			});
 	}
 
 	@Post("/user/get_plans")
-	async getPricingPlans(@CurrentUser({ required: false }) user, @Body() body) {
-		const { user_id } = user;
-		const metaArray = body;
-		if (!user_id) {
+	async getPricingPlans(@CurrentUser({ required: false }) user, @Body()
+    metaArray) {
+        const { user_id } = user;
+        if (!user_id) {
 			return { status: USER_NOT_REGISTERED };
 		}
 
-		return this.userService
+        return this.userService
 			.addUserMeta(metaArray, user_id)
 			.then(async () => {
 				return { status: "success" };
 			})
-			.catch((err) => {
+			.catch(() => {
 				return new InternalServerError("Some internal error occurred");
 			});
-	}
+    }
 
 	@Post("/user/start_trial")
-	async startUserTrial(@CurrentUser({ required: false }) user, @Body() body) {
-		const { user_id } = user;
+	async startUserTrial(@CurrentUser({ required: false }) user, @Body()
+    metaArray) {
+        const { user_id } = user;
 
-		// Update stripe
-
-		// Start team_pricing_log
-
-		const metaArray = body;
-		if (!user_id) {
+        if (!user_id) {
 			return { status: USER_NOT_REGISTERED };
 		}
 
-		return this.userService
+        return this.userService
 			.addUserMeta(metaArray, user_id)
 			.then(async () => {
 				return { status: "success" };
 			})
-			.catch((err) => {
+			.catch(() => {
 				return new InternalServerError("Some internal error occurred");
 			});
-	}
+    }
 
 	@Authorized()
 	@Post("/meta/add")
-	async addUserMeta(@CurrentUser({ required: true }) user, @Body() body) {
-		const { user_id } = user;
-		const metaArray = body;
+	async addUserMeta(@CurrentUser({ required: true }) user, @Body()
+    metaArray) {
+        const { user_id } = user;
 
-		return this.userService
+        return this.userService
 			.addUserMeta(metaArray, user_id)
 			.then(async () => {
 				return { status: "success" };
 			})
-			.catch((err) => {
+			.catch(() => {
 				return new InternalServerError("Some internal error occurred");
 			});
-	}
+    }
 
 	@Authorized()
-	@OnNull(500)
-	@Get("/info")
-	async getUserInfo(@CurrentUser({ required: true }) user, @Res() res): Promise<iUserInfoResponse> {
+    @OnNull(500)
+    @Get("/info")
+    async getUserInfo(@CurrentUser({ required: true }) user): Promise<iUserInfoResponse> {
 		const { user_id } = user;
 		const info = await this.userService.getUserInfo(user_id);
 		if (info) {

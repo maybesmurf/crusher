@@ -16,7 +16,7 @@ export function authorization() {
 				return false;
 			}
 			return user;
-		} catch (error) {
+		} catch {
 			clearAuthCookies(action.response);
 			return false;
 		}

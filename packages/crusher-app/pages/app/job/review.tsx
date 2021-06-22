@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { Header } from "@ui/containers/reviewPage/BuildHeader";
-import React, {useCallback, useEffect, useState} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import withSession from "@hoc/withSession";
 
 import { css } from "@emotion/core";
@@ -18,7 +18,7 @@ import Passed from "../../../public/svg/jobReview/passed.svg";
 import Failed from "../../../public/svg/jobReview/failed.svg";
 import ReviewIcon from "../../../public/svg/jobReview/review.svg";
 
-import {setCurrentJobPlatform, setJobInfo} from "@redux/actions/job";
+import { setCurrentJobPlatform, setJobInfo } from "@redux/actions/job";
 import { useSelector } from "react-redux";
 import {
 	getCurrentJob,
@@ -39,25 +39,17 @@ const MODAL_TYPE = {
 };
 
 function JobInfoBox() {
-    const jobInfo: JobInfo["job"] = useSelector(getCurrentJob);
+	const jobInfo: JobInfo["job"] = useSelector(getCurrentJob);
 
-    const {
-        id: jobId,
-        branch_name: branchName,
-        commit_name: commitName
-    } = jobInfo;
+	const { id: jobId, branch_name: branchName, commit_name: commitName } = jobInfo;
 
-    const approveAll = () => {
+	const approveAll = () => {
 		alert("Approved");
 	};
 
-    return (
+	return (
 		<div className=" mg-t-70">
-			<div
-				className="card ht-md-100p d-flex justify-content-center "
-				style={{ padding: 0 }}
-				css={[containerCss, styles.blackTopCard]}
-			>
+			<div className="card ht-md-100p d-flex justify-content-center " style={{ padding: 0 }} css={[containerCss, styles.blackTopCard]}>
 				<div className="d-flex" style={{ display: "flex", padding: "20px 0px" }}>
 					<div
 						style={{
@@ -113,11 +105,7 @@ function JobInfoBox() {
 						<div className="d-lg-block align-items-end">
 							<div className="d-flex align-items-center">
 								{branchName && (
-								<code
-									className="tx-normal mg-b-0 mg-r-5 lh-1 tx-color-01"
-									css={styles.branchContainer}
-								>
-
+									<code className="tx-normal mg-b-0 mg-r-5 lh-1 tx-color-01" css={styles.branchContainer}>
 										<span
 											style={{
 												fontSize: "0.8375rem",
@@ -127,8 +115,8 @@ function JobInfoBox() {
 										>
 											{branchName}
 										</span>
-
-								</code>		)}
+									</code>
+								)}
 							</div>
 							<div className="tx-14 tx-color-03" css={styles.commitName}>
 								{commitName && (
@@ -141,28 +129,16 @@ function JobInfoBox() {
 									>
 										{commitName}
 									</span>
-								) }
+								)}
 							</div>
 						</div>
 					</div>
 
 					<div className="card-body col col-lg-4 ml-5"></div>
 
-					<div
-						className="card-body col col-lg1 d-flex justify-content-center align-items-center"
-						style={{ paddingRight: "0.3rem" }}
-					>
-						<div
-							className="tx-bold d-flex"
-							css={styles.approveButton}
-							style={{ marginLeft: "auto" }}
-						>
-							<img
-								src="/svg/unselectedThumbsIcon.svg"
-								width={14}
-								height={18}
-								className="ml-2"
-							/>
+					<div className="card-body col col-lg1 d-flex justify-content-center align-items-center" style={{ paddingRight: "0.3rem" }}>
+						<div className="tx-bold d-flex" css={styles.approveButton} style={{ marginLeft: "auto" }}>
+							<img src="/svg/unselectedThumbsIcon.svg" width={14} height={18} className="ml-2" />
 							<div
 								className="text-center flex-1"
 								style={{
@@ -182,23 +158,13 @@ function JobInfoBox() {
 	);
 }
 
-function RenderScreenshotComparison({
-    screenshot,
-    result
-}) {
+function RenderScreenshotComparison({ screenshot, result }) {
 	// null value means that the status of screenshot is getting loaded
-	const {
-        name: screenshotName,
-        url: screenshotUrl
-    } = screenshot;
+	const { name: screenshotName, url: screenshotUrl } = screenshot;
 
-	const [approvedScreenshot, setScreenshotApproved] = useState(
-		result ? result.status === "PASSED" : false,
-	);
+	const [approvedScreenshot, setScreenshotApproved] = useState(result ? result.status === "PASSED" : false);
 
-	const {
-        diff_image_url
-    } = result || {} as any;
+	const { diff_image_url } = result || ({} as any);
 	const [shouldShowCommentsBox, setShouldShowCommentsBox] = useState(false);
 
 	useEffect(() => {
@@ -265,9 +231,7 @@ function RenderScreenshotComparison({
 							<img src={screenshotUrl} width={"auto"} style={{ maxWidth: "100%" }} />
 						</div>
 						<div className="col col-6 d-flex pd-0 pr-0 mr-0" css={styles.visualImage}>
-							{diff_image_url && (
-								<img src={diff_image_url} width={"auto"} style={{ maxWidth: "100%" }} />
-							)}
+							{diff_image_url && <img src={diff_image_url} width={"auto"} style={{ maxWidth: "100%" }} />}
 						</div>
 					</div>
 					<div className="row pd-0 mg-0 mg-t-20 justify-content-end">
@@ -282,20 +246,22 @@ function RenderScreenshotComparison({
 function OverlayModal(props) {
 	const { shouldShow, children, closeModalCallback } = props;
 	if (!shouldShow) return null;
-	return <>
-        <div css={styles.overlay} onClick={closeModalCallback}></div>
-        <div
-            style={{
-                position: "fixed",
-                zIndex: 100_001,
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                top: "50%",
-            }}
-        >
-            {children}
-        </div>
-    </>;
+	return (
+		<>
+			<div css={styles.overlay} onClick={closeModalCallback}></div>
+			<div
+				style={{
+					position: "fixed",
+					zIndex: 100_001,
+					left: "50%",
+					transform: "translate(-50%, -50%)",
+					top: "50%",
+				}}
+			>
+				{children}
+			</div>
+		</>
+	);
 }
 
 function GetStatusImage(props: any) {
@@ -308,79 +274,51 @@ function GetStatusImage(props: any) {
 	} else if (conclusion === "MANUAL_REVIEW_REQUIRED") {
 		return <ReviewIcon style={{ height: "1.5rem" }} />;
 	} else if (conclusion === "RUNNING_CHECKS") {
-		return (
-			<img style={{ height: "1.5rem" }} src={"/svg/jobReview/loading.svg"} />
-		);
+		return <img style={{ height: "1.5rem" }} src={"/svg/jobReview/loading.svg"} />;
 	} else {
 		return null;
 	}
 }
 
-function TestInstanceReview({
-	instance,
-	reportId,
-	showVideoModalCallback,
-	showLogsModalCallback,
-}) {
-    const {
-        id: instance_id,
-        test_name,
-        images: screenshots,
-        recorded_video_uri
-    } = instance;
-    const jobResults = useSelector(getCurrentJobResults);
-    const jobComments = useSelector(getCurrentJobComments);
-    const sortedScreenshots = screenshots.sort((a, b) => {
+function TestInstanceReview({ instance, reportId, showVideoModalCallback, showLogsModalCallback }) {
+	const { id: instance_id, test_name, images: screenshots, recorded_video_uri } = instance;
+	const jobResults = useSelector(getCurrentJobResults);
+	const jobComments = useSelector(getCurrentJobComments);
+	const sortedScreenshots = screenshots.sort((a, b) => {
 		return a.name < b.name ? -1 : 1;
 	});
 
-    const screenshotsOut = sortedScreenshots.map((screenshot) => {
-		const result =
-			jobResults[instance_id]?.results
-				? jobResults[instance_id].results.filter((result) => {
-						return result.screenshot_id === screenshot.id;
-				  })[0]
-				: null;
+	const screenshotsOut = sortedScreenshots.map((screenshot) => {
+		const result = jobResults[instance_id]?.results
+			? jobResults[instance_id].results.filter((result) => {
+					return result.screenshot_id === screenshot.id;
+			  })[0]
+			: null;
 
-		const comments =
-			jobComments && result && jobComments[result.id]
-				? jobComments[result.id]
-				: [];
+		const comments = jobComments && result && jobComments[result.id] ? jobComments[result.id] : [];
 
-		return (
-			<RenderScreenshotComparison
-				instance={instance}
-				result={result}
-				reportId={reportId}
-				comments={comments}
-				screenshot={screenshot}
-			/>
-		);
+		return <RenderScreenshotComparison instance={instance} result={result} reportId={reportId} comments={comments} screenshot={screenshot} />;
 	});
 
-    const results = jobResults[instance_id]?.results;
+	const results = jobResults[instance_id]?.results;
 
-    function playVideo() {
+	function playVideo() {
 		showVideoModalCallback(recorded_video_uri, instance_id);
 	}
 
-    function showLogsInModal() {
+	function showLogsInModal() {
 		showLogsModalCallback(instance_id);
 	}
 
-    const instanceReportConclusion = jobResults[instance_id]
-		? jobResults[instance_id].conclusion
-		: null;
+	const instanceReportConclusion = jobResults[instance_id] ? jobResults[instance_id].conclusion : null;
 
-    const handleThumbToggle = () => {
+	const handleThumbToggle = () => {
 		console.log(JSON.stringify(jobResults[instance_id].conclusion));
 	};
 
-    const instanceFinishedRunning =
-		instance.status !== TestInstanceStatus.RUNNING &&
-		instance.status !== TestInstanceStatus.QUEUED;
+	const instanceFinishedRunning = instance.status !== TestInstanceStatus.RUNNING && instance.status !== TestInstanceStatus.QUEUED;
 
-    return (
+	return (
 		<div className="" css={styles.bodyBackground}>
 			<div
 				className="card-header"
@@ -395,16 +333,8 @@ function TestInstanceReview({
 				}}
 			>
 				<div css={containerCss} className="d-flex pos-relative">
-					<img
-						src="/svg/thumbsUp.svg"
-						className="mt-n1"
-						style={{ cursor: "pointer" }}
-						onClick={handleThumbToggle}
-					/>
-					<div
-						css={testInstanceStripContainerCss}
-						className="tx-white d-flex justify-content-between pl-3"
-					>
+					<img src="/svg/thumbsUp.svg" className="mt-n1" style={{ cursor: "pointer" }} onClick={handleThumbToggle} />
+					<div css={testInstanceStripContainerCss} className="tx-white d-flex justify-content-between pl-3">
 						<h6 className="lh-5 mb-0 tx-white" css={styles.pinBoxHeading}>
 							{test_name}
 						</h6>
@@ -432,20 +362,13 @@ function TestInstanceReview({
 								</div>
 								<div style={{ marginLeft: "1rem" }}>
 									{instanceFinishedRunning
-										? Math.floor(
-												((new Date(instance.updated_at) - new Date(instance.created_at)) /
-													1000) *
-													10,
-										  ) / 10
+										? Math.floor(((new Date(instance.updated_at) - new Date(instance.created_at)) / 1000) * 10) / 10
 										: "N/A"}{" "}
 									Sec
 								</div>
 							</div>
 							{instance && instance.platform === Platform.CHROME ? (
-								<div
-									onClick={playVideo}
-									style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
-								>
+								<div onClick={playVideo} style={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
 									<div>
 										<Play style={{ height: "1.125rem" }} />
 									</div>
@@ -495,9 +418,7 @@ function TestInstanceReview({
 						<div>
 							<GetStatusImage conclusion={instanceReportConclusion} />
 						</div>
-						<div style={{ marginLeft: "1rem" }}>
-							Test {toPascalCase(instanceReportConclusion)}
-						</div>
+						<div style={{ marginLeft: "1rem" }}>Test {toPascalCase(instanceReportConclusion)}</div>
 					</div>
 					<div style={{ marginLeft: "auto", display: "flex", flexDirection: "row" }}>
 						<div
@@ -514,9 +435,7 @@ function TestInstanceReview({
 							}}
 						>
 							<img src={"/svg/debug.svg"} width={22} />
-							<span style={{ marginLeft: "0.8rem", marginTop: "0.1rem" }}>
-								Debug info
-							</span>
+							<span style={{ marginLeft: "0.8rem", marginTop: "0.1rem" }}>Debug info</span>
 						</div>
 					</div>
 				</div>
@@ -553,12 +472,7 @@ function RenderTestInstances(props) {
 function VideoModal({ video_uri }) {
 	return (
 		<div css={styles.videoOverlayContent}>
-			<video
-				controls={true}
-				style={{ width: "40" }}
-				autoPlay={true}
-				src={video_uri}
-			/>
+			<video controls={true} style={{ width: "40" }} autoPlay={true} src={video_uri} />
 		</div>
 	);
 }
@@ -566,11 +480,7 @@ function VideoModal({ video_uri }) {
 function LogsModal({ logs }) {
 	return (
 		<div css={styles.logsOverlayContent}>
-			<LogsBox
-				style={{ background: "#fff" }}
-				status={TestInstanceStatus.FINISHED}
-				testInfo={{ logs, status: TestInstanceStatus.QUEUED }}
-			/>
+			<LogsBox style={{ background: "#fff" }} status={TestInstanceStatus.FINISHED} testInfo={{ logs, status: TestInstanceStatus.QUEUED }} />
 		</div>
 	);
 }
@@ -624,61 +534,40 @@ function JobReviews(props) {
 
 	// @ts-ignore
 	return (
-        <div
-			className=""
-			style={{ display: "flex", flexDirection: "column", background: "#131415" }}
-		>
+		<div className="" style={{ display: "flex", flexDirection: "column", background: "#131415" }}>
 			<Head>
 				<title>Add a Test Group | Control center to maintain all your tests</title>
-				<link
-					href="/assets/img/favicon.png"
-					rel="shortcut icon"
-					type="image/x-icon"
-				/>
-				<link
-					href="/lib/@fortawesome/fontawesome-free/css/all.min.css"
-					rel="stylesheet"
-				/>
+				<link href="/assets/img/favicon.png" rel="shortcut icon" type="image/x-icon" />
+				<link href="/lib/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
 				<link href="/lib/ionicons/css/ionicons.min.css" rel="stylesheet" />
 
 				<link href="/assets/css/dashforge.css" rel="stylesheet" />
 				<link href="/assets/css/dashforge.dashboard.css" rel="stylesheet" />
 			</Head>
 			<div>Hi everyone!!</div>
-			<Header
-				onPlatformChanged={handlePlatformChange}
-				platform={platform}
-				referenceJob={referenceJob}
-				reportId={reportId}
-			></Header>
+			<Header onPlatformChanged={handlePlatformChange} platform={platform} referenceJob={referenceJob} reportId={reportId}></Header>
 
 			<div style={{ height: "100vh", backgroundColor: "#131415" }}>
 				<JobInfoBox />
-				<RenderTestInstances
-					showLogsModalCallback={showLogsModalCallback}
-					showVideoModalCallback={showVideoModalCallback}
-					reportId={reportId}
-				/>
+				<RenderTestInstances showLogsModalCallback={showLogsModalCallback} showVideoModalCallback={showVideoModalCallback} reportId={reportId} />
 			</div>
 
-			{modalStatus?.shown &&
-				modalStatus.type === MODAL_TYPE.TEST_INSTANCE_VIDEO && (
-					<OverlayModal closeModalCallback={closeModal} shouldShow={true}>
-						<VideoModal video_uri={modalStatus.value.uri} />
-					</OverlayModal>
-				)}
-			{modalStatus?.shown &&
-				modalStatus.type === MODAL_TYPE.TEST_INSTANCE_LOGS && (
-					<OverlayModal closeModalCallback={closeModal} shouldShow={true}>
-						{testsLogsForInstancesMap[modalStatus.instanceId] ? (
-							<LogsModal logs={testsLogsForInstancesMap[modalStatus.instanceId]} />
-						) : (
-							<div>Loading.....</div>
-						)}
-					</OverlayModal>
-				)}
+			{modalStatus?.shown && modalStatus.type === MODAL_TYPE.TEST_INSTANCE_VIDEO && (
+				<OverlayModal closeModalCallback={closeModal} shouldShow={true}>
+					<VideoModal video_uri={modalStatus.value.uri} />
+				</OverlayModal>
+			)}
+			{modalStatus?.shown && modalStatus.type === MODAL_TYPE.TEST_INSTANCE_LOGS && (
+				<OverlayModal closeModalCallback={closeModal} shouldShow={true}>
+					{testsLogsForInstancesMap[modalStatus.instanceId] ? (
+						<LogsModal logs={testsLogsForInstancesMap[modalStatus.instanceId]} />
+					) : (
+						<div>Loading.....</div>
+					)}
+				</OverlayModal>
+			)}
 		</div>
-    );
+	);
 }
 
 JobReviews.getInitialProps = async ({ req, res, query, store }) => {

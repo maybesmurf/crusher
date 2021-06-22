@@ -1,6 +1,5 @@
 require("dotenv").config();
 
-import "reflect-metadata";
 import { CronJob } from "cron";
 import { Container } from "typedi";
 import MonitoringService from "./core/services/MonitoringService";
@@ -27,9 +26,8 @@ async function preChecks() {
 
 export async function init() {
 	if (!(await preChecks())) {
-		throw new Error("Some error occurred while trying to connection with mongodb or mysql");
-		process.exit();
-	}
+        throw new Error("Some error occurred while trying to connection with mongodb or mysql");
+    }
 
 	Logger.debug("CRON", "Started STOP_STALLED_TESTS_CHECKER cron job every 10 minutes");
 	const stopStalledTestsCronJob = new CronJob(
@@ -39,11 +37,9 @@ export async function init() {
 			try {
 				const jobsService = Container.get(JobsService);
 				await jobsService.stopAllJobsRunningForMoreThanAnHour();
-			} catch (ex) {
-				this.stop();
-				// Restart the process to avoid cron loop in-case of unhandled errors like service connection failure.
-				process.exit();
-			}
+			} catch {
+                this.stop();
+            }
 		},
 		null,
 		true,
@@ -64,13 +60,11 @@ export async function init() {
 					await monitoringService.updateLastCronRunForProject(monitoring.id);
 				}
 			} catch (ex) {
-				// Cleanup job if some error occurred during cron
-				Logger.fatal("startTestCron", "Error occurred when starting the tests", ex);
+                // Cleanup job if some error occurred during cron
+                Logger.fatal("startTestCron", "Error occurred when starting the tests", ex);
 
-				this.stop();
-				// Restart the process to avoid cron loop in-case of unhandled errors like service connection failure.
-				process.exit();
-			}
+                this.stop();
+            }
 		},
 		null,
 		true,

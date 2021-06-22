@@ -1,9 +1,5 @@
-import { Container, Inject, Service } from "typedi";
+import {Container, Service} from "typedi";
 import DBManager from "../manager/DBManager";
-import { TestInstanceResultSet } from "../interfaces/db/TestInstanceResultSet";
-import TestInstanceResultsService from "./TestInstanceResultsService";
-import { TestInstanceResultStatus } from "../interfaces/TestInstanceResultStatus";
-import { TestInstanceResultSetConclusion } from "../interfaces/TestInstanceResultSetConclusion";
 import { TestInstanceRecording } from "../interfaces/db/TestInstanceRecording";
 
 @Service()

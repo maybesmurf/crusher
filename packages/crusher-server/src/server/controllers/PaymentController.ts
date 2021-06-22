@@ -23,7 +23,7 @@ export class PaymentController {
 	// Returns pricing plans for current user.
 	// Base plan + custom plans if any. This can also be changed after starting a trials
 	@Get("/get/all")
-	async getPricingPlans(@CurrentUser({ required: false }) user, @Body() body) {
+    async getPricingPlans(@CurrentUser({ required: false }) user) {
 		const { team_id } = user;
 
 		const stripePromise = this.paymentService.getDataFromStripe(team_id);
@@ -52,7 +52,9 @@ export class PaymentController {
 	// In that case set trial equal false and create normal log.
 	@Post("/billing/change_item")
 	async changePlan(@CurrentUser({ required: false }) user, @Body() body) {
-		const { new_plan_id: newPlanId, pricing_log_id: currentPricingLog } = body;
+		const {
+            new_plan_id: newPlanId
+        } = body;
 		const { team_id: teamId, subscription_id } = user;
 		return this.paymentService.changePlan(teamId, newPlanId, subscription_id);
 	}
@@ -90,7 +92,9 @@ export class PaymentController {
 	@Post("/start/billing")
 	async startUserTrial(@CurrentUser({ required: false }) user, @Body() body) {
 		const { team_id: teamId } = user;
-		const { plan_ids: planIds, trial = false } = body;
+		const {
+            plan_ids: planIds
+        } = body;
 		return this.paymentService.startBilling(teamId, planIds);
 	}
 
@@ -98,65 +102,65 @@ export class PaymentController {
 	// Can be overriden for large companies.
 	// In that case set trial equal false and create normal log.
 	@Post("/stop_plan")
-	async stopPlan(@CurrentUser({ required: false }) user, @Body() body) {
+    async stopPlan(@CurrentUser({ required: false }) user) {
 		const { team_id } = user;
 		return this.paymentService.switchToFreePlan(team_id);
 	}
 
 	// Get all cards
 	@Get("/get/cards")
-	async addUserMeta(@CurrentUser({ required: false }) user, @Body() body) {
-		const { user_id } = user;
-		const metaArray = body;
-		if (!user_id) {
+	async addUserMeta(@CurrentUser({ required: false }) user, @Body()
+    metaArray) {
+        const { user_id } = user;
+        if (!user_id) {
 			return { status: USER_NOT_REGISTERED };
 		}
 
-		return this.userService
+        return this.userService
 			.addUserMeta(metaArray, user_id)
 			.then(async () => {
 				return { status: "success" };
 			})
-			.catch((err) => {
+			.catch(() => {
 				return new InternalServerError("Some internal error occurred");
 			});
-	}
+    }
 
 	// Get all cards
 	@Get("/get/current_plan")
-	async getCurrentPlans(@CurrentUser({ required: false }) user, @Body() body) {
-		const { user_id } = user;
-		const metaArray = body;
-		if (!user_id) {
+	async getCurrentPlans(@CurrentUser({ required: false }) user, @Body()
+    metaArray) {
+        const { user_id } = user;
+        if (!user_id) {
 			return { status: USER_NOT_REGISTERED };
 		}
 
-		return this.userService
+        return this.userService
 			.addUserMeta(metaArray, user_id)
 			.then(async () => {
 				return { status: "success" };
 			})
-			.catch((err) => {
+			.catch(() => {
 				return new InternalServerError("Some internal error occurred");
 			});
-	}
+    }
 
 	// Get all cards
 	@Get("/get/invoice")
-	async getInvoice(@CurrentUser({ required: false }) user, @Body() body) {
-		const { user_id } = user;
-		const metaArray = body;
-		if (!user_id) {
+	async getInvoice(@CurrentUser({ required: false }) user, @Body()
+    metaArray) {
+        const { user_id } = user;
+        if (!user_id) {
 			return { status: USER_NOT_REGISTERED };
 		}
 
-		return this.userService
+        return this.userService
 			.addUserMeta(metaArray, user_id)
 			.then(async () => {
 				return { status: "success" };
 			})
-			.catch((err) => {
+			.catch(() => {
 				return new InternalServerError("Some internal error occurred");
 			});
-	}
+    }
 }

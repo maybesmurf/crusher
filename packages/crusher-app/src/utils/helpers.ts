@@ -122,7 +122,7 @@ export function getDiffInDays(date1: Date, date2: Date) {
 
 export function isWindowCrossOrigin(window: Window) {
 	try {
-		return !(Boolean(window.location.href));
+		return !Boolean(window.location.href);
 	} catch {
 		return true;
 	}
@@ -163,16 +163,14 @@ export function nth(d: number) {
 }
 
 export function formatAMPM(date: Date) {
-    let hours = date.getHours();
-    let minutes: string | number = date.getMinutes();
-    const ampm = hours >= 12 ? "PM" : "AM";
-    hours = hours % 12;
-    if (!hours)
-        hours = 12; // the hour '0' should be '12'
-    if (minutes < 10)
-        minutes = "0" + minutes;
-    const strTime = hours + ":" + minutes + " " + ampm;
-    return strTime;
+	let hours = date.getHours();
+	let minutes: string | number = date.getMinutes();
+	const ampm = hours >= 12 ? "PM" : "AM";
+	hours = hours % 12;
+	if (!hours) hours = 12; // the hour '0' should be '12'
+	if (minutes < 10) minutes = "0" + minutes;
+	const strTime = hours + ":" + minutes + " " + ampm;
+	return strTime;
 }
 
 // Mainly for generating default test name

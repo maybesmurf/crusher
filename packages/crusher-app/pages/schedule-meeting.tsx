@@ -37,11 +37,8 @@ const bookDescription = css`
 	font-size: 0.82rem;
 `;
 
-function CrusherSelectBox({
-    text,
-    description
-}) {
-    return (
+function CrusherSelectBox({ text, description }) {
+	return (
 		<div css={SelectBox}>
 			<div>
 				{/*<Checkbox defaultChecked color="primary" checked={checked} onChange={handleChange} inputProps={{ "aria-label": "secondary checkbox" }} />*/}

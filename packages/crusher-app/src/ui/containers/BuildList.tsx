@@ -1,4 +1,4 @@
-import React, {JSXElementConstructor, useState} from "react";
+import React, { JSXElementConstructor, useState } from "react";
 import { Pagination } from "@ui/components/common/Pagination";
 
 interface iFilter {
@@ -18,21 +18,13 @@ interface iFilterListPaginationProps {
 	resolvePaginationUrl: any;
 }
 
-
 interface iFilters {
 	category: number;
 	currentPage: number;
 }
 
 const BuildList = (props: iFilterListPaginationProps) => {
-	const {
-		currentPage,
-		items,
-		resolvePaginationUrl,
-		totalPages,
-		selectedCategory,
-		itemsListComponent: ItemsListComponent,
-	} = props;
+	const { currentPage, items, resolvePaginationUrl, totalPages, selectedCategory, itemsListComponent: ItemsListComponent } = props;
 
 	const [filters] = useState({
 		currentPage: parseInt(currentPage as any),
@@ -40,7 +32,7 @@ const BuildList = (props: iFilterListPaginationProps) => {
 	} as iFilters);
 
 	return (
-        <div>
+		<div>
 			<ItemsListComponent items={items} />
 
 			<Pagination
@@ -50,7 +42,7 @@ const BuildList = (props: iFilterListPaginationProps) => {
 				resolvePaginationUrl={resolvePaginationUrl}
 			/>
 		</div>
-    );
+	);
 };
 
 export { BuildList };

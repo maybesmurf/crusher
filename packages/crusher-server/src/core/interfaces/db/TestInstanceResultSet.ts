@@ -1,5 +1,4 @@
 import { BaseRowInterface } from "./BaseRowInterface";
-import { TestInstanceResultStatus } from "../TestInstanceResultStatus";
 import { TestInstanceResultSetConclusion } from "../TestInstanceResultSetConclusion";
 import { TestInstanceResultSetStatus } from "../TestInstanceResultSetStatus";
 

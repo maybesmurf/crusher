@@ -21,7 +21,7 @@ export class JobsControllerV2 {
 	private testInstanceResultsServiceV2: TestInstanceResultsV2;
 
 	@Get("/get/:jobId")
-	async getJob(@Param("jobId") jobId: number) {}
+    async getJob() {}
 
 	@Authorized()
 	@Get("/status/:jobId")

@@ -3,8 +3,8 @@ import { withSidebarLayout } from "@hoc/withSidebarLayout";
 import withSession from "@hoc/withSession";
 
 function ProjectMonitoring() {
-    return (
-        <div
+	return (
+		<div
 			style={{
 				display: "flex",
 				flexDirection: "column",
@@ -48,7 +48,7 @@ function ProjectMonitoring() {
 				</div>
 			</div>
 		</div>
-    );
+	);
 }
 
 const styles = {

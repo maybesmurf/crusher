@@ -6,7 +6,7 @@ import { NextApiRequest, NextApiResponse, NextComponentType, NextPage, NextPageC
 import { getUserInfo } from "@redux/stateUtils/user";
 import { AnyAction } from "redux";
 import { getEdition } from "@utils/helpers";
-import { EDITION_TYPE } from '@crusher-shared/types/common/general';
+import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 
 const handleClIToken = (cli_token: string, res: NextApiResponse) => {
 	if (cli_token) {
@@ -31,16 +31,14 @@ function withoutSession(WrappedComponent: NextPage | NextComponentType<NextPageC
 		if (query.cli_token) {
 			handleClIToken(query.cli_token as string, res as NextApiResponse);
 		}
-		const {
-            isLoggedIn
-        } = reqMetaInfo.cookies;
+		const { isLoggedIn } = reqMetaInfo.cookies;
 
 		if (userInfo && isLoggedIn) {
-			 await redirectToFrontendPath("/app/project/dashboard", res as NextApiResponse);
-			 return
+			await redirectToFrontendPath("/app/project/dashboard", res as NextApiResponse);
+			return;
 		} else if (getEdition() === EDITION_TYPE.OPEN_SOURCE) {
-			 await redirectToBackendURI("/v2/user/init", res as NextApiResponse);
-			 return ;
+			await redirectToBackendURI("/v2/user/init", res as NextApiResponse);
+			return;
 		}
 
 		const pageProps = WrappedComponent.getInitialProps && (await WrappedComponent.getInitialProps(ctx));

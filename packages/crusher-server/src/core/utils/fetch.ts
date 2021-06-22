@@ -1,16 +1,18 @@
-import { appendParamsToURI, checkIfAbsoluteURI, getAbsoluteURIIfRelative } from "./uri";
+import {appendParamsToURI, getAbsoluteURIIfRelative} from "./uri";
 import { Logger } from "../../utils/logger";
 import * as chalk from "chalk";
 const _fetch = require("node-fetch");
 
 export function prepareFetchPayload(uri: string, info: any = {}) {
-	let method = info.method ? info.method : "GET";
-	let header = info.header ? info.header : {};
-	let payload = info.payload ? info.payload : {};
+    let {
+        method = "GET",
+        header = {},
+        payload = {}
+    } = info;
 
-	uri = getAbsoluteURIIfRelative(uri);
+    uri = getAbsoluteURIIfRelative(uri);
 
-	switch (method.toUpperCase()) {
+    switch (method.toUpperCase()) {
 		case "GET":
 			uri = appendParamsToURI(uri, payload);
 			break;
@@ -22,10 +24,9 @@ export function prepareFetchPayload(uri: string, info: any = {}) {
 			};
 			break;
 		default:
-			throw new Error("Invalid post-method passed, only GET and POST supported");
-			break;
+            throw new Error("Invalid post-method passed, only GET and POST supported");
 	}
-	return { uri, method, header };
+    return { uri, method, header };
 }
 
 export function fetch(_uri, info: any = {}) {
@@ -38,7 +39,7 @@ export function fetch(_uri, info: any = {}) {
 		_fetch(uri, {
 			headers: header,
 			method: method,
-			body: body ? body : payload && method !== "GET" ? JSON.stringify(payload) : null,
+			body: body || (payload && method !== "GET" ? JSON.stringify(payload) : null),
 		})
 			.then(async (res) => {
 				const elapsedHrTime = process.hrtime(startHrTime);

@@ -1,5 +1,5 @@
 import { Modal } from "@ui/containers/modals/modal";
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { css } from "@emotion/core";
 import { ModalButton } from "@ui/components/modal/button";
 import { MultiSelect } from "@ui/components/modal/multiSelect";
@@ -11,9 +11,7 @@ interface iProps {
 }
 
 const ModifyTestSettingsModal = (props: iProps) => {
-	const {
-        onClose
-    } = props;
+	const { onClose } = props;
 	const [selectedBrowsers, setSelectedBrowsers] = useState([{ label: "Chrome", value: "CHROME" }]);
 	const [selectedResolutions, setSelectedResolutions] = useState([]);
 	const [shouldSaveTestSettingsForFuture, setShouldSaveTestSettingsForFuture] = useState(false);

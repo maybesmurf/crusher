@@ -1,5 +1,4 @@
 import { BaseRowInterface } from "./BaseRowInterface";
-import { TestFramework } from "../TestFramework";
 
 export interface Draft extends BaseRowInterface {
 	id?: number;

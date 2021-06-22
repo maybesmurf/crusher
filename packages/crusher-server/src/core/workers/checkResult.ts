@@ -2,7 +2,6 @@ import JobsService from "../services/JobsService";
 import TestService from "../services/TestService";
 import TestInstanceService from "../services/TestInstanceService";
 import TestInstanceResultSetsService from "../services/TestInstanceResultSetsService";
-import TestInstanceResultsService from "../services/TestInstanceResultsService";
 import TestInstanceScreenShotsService from "../services/TestInstanceScreenShotsService";
 import AlertingService from "../services/AlertingService";
 import UserService from "../services/UserService";
@@ -11,9 +10,6 @@ import { JobStatus } from "../interfaces/JobStatus";
 import { TestInstance } from "../interfaces/db/TestInstance";
 import { TestInstanceResultSetStatus } from "../interfaces/TestInstanceResultSetStatus";
 import { TestInstanceScreenshot } from "../interfaces/db/TestInstanceScreenshot";
-import { visualDiffWithURI } from "../utils/visualDiff";
-import { TestType } from "../interfaces/TestType";
-import { TestInstanceResultStatus } from "../interfaces/TestInstanceResultStatus";
 import { updateGithubCheckStatus } from "../../utils/github";
 import { GithubCheckStatus } from "../interfaces/GithubCheckStatus";
 import { GithubConclusion } from "../interfaces/GithubConclusion";
@@ -24,13 +20,11 @@ import { EmailManager } from "../manager/EmailManager";
 import { resolvePathToFrontendURI } from "../utils/uri";
 import { Job } from "bullmq";
 import { REDDIS } from "../../../config/database";
-import "reflect-metadata";
 
 import * as IORedis from "ioredis";
 import JobReportServiceV2 from "../services/v2/JobReportServiceV2";
 import { TestInstanceResultSetConclusion } from "../interfaces/TestInstanceResultSetConclusion";
 import { JobReportStatus } from "../interfaces/JobReportStatus";
-import { CloudBucketManager } from "../manager/CloudBucketManager";
 import * as ejs from "ejs";
 import * as ReddisLock from "redlock";
 
@@ -40,13 +34,9 @@ const jobsReportService = Container.get(JobReportServiceV2);
 const testService = Container.get(TestService);
 const testInstanceService = Container.get(TestInstanceService);
 const testInstanceResultSetsService = Container.get(TestInstanceResultSetsService);
-const testInstanceResultsService = Container.get(TestInstanceResultsService);
 const testInstanceScreenshotsService = Container.get(TestInstanceScreenShotsService);
 const alertingService = Container.get(AlertingService);
 const userService = Container.get(UserService);
-const cloudBucketManager = new CloudBucketManager({
-	useLocalStack: process.env.NODE_ENV === "production" ? false : true,
-});
 
 interface TestInstanceWithImages extends TestInstance {
 	images: {
@@ -72,127 +62,7 @@ function getReferenceInstance(referenceJobId, testId, platform) {
 	return testInstanceService.getReferenceTestInstance(referenceJobId, testId, platform);
 }
 
-async function calculateDiffBetweenImages(testInstanceImage, referenceInstanceImage, diffPath) {
-	let uploadedDiffUrl = "none";
-	console.log("Generating visual diff", testInstanceImage.url, referenceInstanceImage.url);
-	const diff = await visualDiffWithURI(testInstanceImage.url, referenceInstanceImage.url);
-
-	const diffDelta = diff.diffDelta;
-
-	uploadedDiffUrl = await cloudBucketManager.uploadBuffer(diff.outputBuffer, diffPath);
-
-	return { diffDelta, uploadedDiffUrl };
-}
-
-function getInstanceResultStatus(hasPassed, hasFailed) {
-	if (!hasPassed && !hasFailed) {
-		return TestInstanceResultStatus.MANUAL_REVIEW_REQUIRED;
-	} else if (hasPassed) {
-		return TestInstanceResultStatus.PASSED;
-	} else {
-		return TestInstanceResultStatus.FAILED;
-	}
-}
-
-async function getResultForTestInstance(
-	testInstanceWithImages: TestInstanceWithImages,
-	referenceInstanceWithImages: TestInstanceWithImages,
-	resultSetId: number,
-	shouldPerformDiffChecks,
-) {
-	const testInstanceImageKeys: Array<string> = Object.keys(testInstanceWithImages.images);
-
-	let didAllImagesPass = true;
-	let passedImagesCount = 0;
-	let manualReviewImagesCount = 0;
-	let failedImagesCount = 0;
-
-	const outPromisesFun = testInstanceImageKeys.map((testInstanceKey) => {
-		return async () => {
-			const testInstanceImage = testInstanceWithImages.images[testInstanceKey];
-			const referenceInstanceImage = referenceInstanceWithImages.images[testInstanceKey];
-			console.log("Should run diff", testInstanceImage, referenceInstanceImage);
-
-			if (shouldPerformDiffChecks && referenceInstanceImage) {
-				try {
-					const timeNow = Date.now();
-					const diffResult = await calculateDiffBetweenImages(
-						testInstanceImage,
-						referenceInstanceImage,
-						`${TestType.SAVED}/${testInstanceImage.instance_id}/diff_${testInstanceKey}_${timeNow}.png`,
-					);
-					const { diffDelta, uploadedDiffUrl } = diffResult;
-					const hasImagePassed = diffDelta <= 0.05 ? true : false;
-					// THe middle area is for marked for review.
-					const hasImageFailed = diffDelta > 5 ? true : false;
-
-					const imageComparisonResult = getInstanceResultStatus(hasImagePassed, hasImageFailed);
-
-					if (imageComparisonResult === TestInstanceResultStatus.MANUAL_REVIEW_REQUIRED) {
-						didAllImagesPass = false;
-						manualReviewImagesCount++;
-					} else if (imageComparisonResult === TestInstanceResultStatus.PASSED) {
-						passedImagesCount++;
-					} else {
-						didAllImagesPass = false;
-						failedImagesCount++;
-					}
-
-					return await testInstanceResultsService.createResult({
-						screenshot_id: testInstanceImage.id,
-						target_screenshot_id: referenceInstanceImage.id,
-						diff_delta: diffDelta,
-						diff_image_url: uploadedDiffUrl,
-						status: imageComparisonResult,
-						instance_result_set_id: resultSetId,
-					});
-				} catch (ex) {
-					didAllImagesPass = false;
-					failedImagesCount++;
-					return await testInstanceResultsService.createResult({
-						screenshot_id: testInstanceImage.id,
-						target_screenshot_id: referenceInstanceImage.id,
-						diff_delta: 0,
-						diff_image_url: null,
-						status: TestInstanceResultStatus.ERROR_CREATING_DIFF,
-						instance_result_set_id: resultSetId,
-					});
-				}
-			} else {
-				passedImagesCount++;
-
-				return await testInstanceResultsService.createResult({
-					screenshot_id: testInstanceImage.id,
-					target_screenshot_id: testInstanceImage.id,
-					diff_delta: 0,
-					diff_image_url: null,
-					status: TestInstanceResultStatus.PASSED,
-					instance_result_set_id: resultSetId,
-				});
-			}
-		};
-	});
-
-	try {
-		await Promise.all(
-			outPromisesFun.map((fun: any) => {
-				return fun();
-			}),
-		);
-	} catch (ex) {
-		console.error("Something happened");
-		console.error(ex);
-	}
-
-	return {
-		didAllImagesPass,
-		passedImagesCount,
-		manualReviewImagesCount,
-		failedImagesCount,
-	};
-}
-
-function notifyResultWithEmail(jobRecord: any, result: JobReportStatus, userWhoStartedTheJob: iUser) {
+function notifyResultWithEmail(jobRecord: any, result: JobReportStatus) {
 	// eslint-disable-next-line no-async-promise-executor
 	return new Promise(async (resolve, reject) => {
 		const emailTemplateFilePathMap = {
@@ -241,7 +111,7 @@ async function notifyResultWithSlackIntegrations(jobRecord: any, result: JobRepo
 	}
 }
 
-async function notifyResultToGithubChecks(jobRecord: any, result: JobReportStatus, userWhoStartedTheJob: iUser) {
+async function notifyResultToGithubChecks(jobRecord: any, result: JobReportStatus) {
 	await updateGithubCheckStatus(
 		GithubCheckStatus.COMPLETED,
 		{
@@ -289,40 +159,38 @@ async function handlePostChecksOperations(reportId: number, totalTestCount, jobI
 
 	await jobsReportService.updateJobReportStatus(jobConclusion, reportId, explanation);
 
-	await notifyResultToGithubChecks(jobRecord, jobConclusion, userWhoStartedThisJob);
-	await notifyResultWithEmail(jobRecord, jobConclusion, userWhoStartedThisJob);
+	await notifyResultToGithubChecks(jobRecord, jobConclusion);
+	await notifyResultWithEmail(jobRecord, jobConclusion);
 	await notifyResultWithSlackIntegrations(jobRecord, jobConclusion, userWhoStartedThisJob, state);
 }
 
-async function runChecks(details, clearJobTempValues) {
-	const { githubInstallationId, githubCheckRunId, error, platform, reportId, totalTestCount, screenshots, testId, jobId, instanceId, fullRepoName } = details;
+async function runChecks(details) {
+    const {
+        error,
+        platform,
+        reportId,
+        testId,
+        instanceId
+    } = details;
 
-	const currentJobReport = await jobsReportService.getJobReport(reportId);
+    const currentJobReport = await jobsReportService.getJobReport(reportId);
 
-	const testInstance = await testInstanceService.getTestInstance(instanceId);
-	const referenceInstance = await getReferenceInstance(currentJobReport.reference_job_id, testId, platform);
-	const shouldPerformDiffChecks = jobId !== currentJobReport.reference_job_id;
+    const testInstance = await testInstanceService.getTestInstance(instanceId);
+    const referenceInstance = getReferenceInstance(currentJobReport.reference_job_id, testId, platform);
 
-	// Create result set for this config
-	const { insertId: resultSetId } = await testInstanceResultSetsService.createResultSet({
+    // Create result set for this config
+    const { insertId: resultSetId } = await testInstanceResultSetsService.createResultSet({
 		instance_id: instanceId,
 		target_instance_id: referenceInstance ? referenceInstance.id : instanceId,
 		report_id: reportId,
 		status: TestInstanceResultSetStatus.RUNNING_CHECKS,
 	});
 
-	const testInstanceWithImages = await getOrganisedTestInstanceWithImages(testInstance);
-	const referenceInstanceWithImages = await getOrganisedTestInstanceWithImages(referenceInstance);
-	console.log("Reference instance is", testInstanceWithImages, referenceInstanceWithImages);
+    const testInstanceWithImages = await getOrganisedTestInstanceWithImages(testInstance);
+    const referenceInstanceWithImages = await getOrganisedTestInstanceWithImages(referenceInstance);
+    console.log("Reference instance is", testInstanceWithImages, referenceInstanceWithImages);
 
-	const { didAllImagesPass, passedImagesCount, manualReviewImagesCount, failedImagesCount } = await getResultForTestInstance(
-		testInstanceWithImages,
-		referenceInstanceWithImages,
-		resultSetId,
-		shouldPerformDiffChecks,
-	);
-
-	await testInstanceResultSetsService.updateResultSetStatus(resultSetId, error);
+    await testInstanceResultSetsService.updateResultSetStatus(resultSetId, error);
 }
 
 module.exports = async (bullJob: Job) => {
@@ -364,22 +232,19 @@ module.exports = async (bullJob: Job) => {
 			await reddisClient.incr(`${jobId}:completed`);
 			const completedTestsCount = parseInt(await reddisClient.get(`${jobId}:completed`));
 
-			await runChecks(
-				{
-					error,
-					githubInstallationId,
-					githubCheckRunId,
-					totalTestCount,
-					screenshots,
-					testId,
-					jobId,
-					instanceId,
-					reportId,
-					fullRepoName,
-					platform,
-				},
-				clearJobTempValues,
-			);
+			await runChecks({
+                error,
+                githubInstallationId,
+                githubCheckRunId,
+                totalTestCount,
+                screenshots,
+                testId,
+                jobId,
+                instanceId,
+                reportId,
+                fullRepoName,
+                platform,
+            });
 
 			console.log("Cleaning up now", completedTestsCount, totalTestCount);
 			if (completedTestsCount === totalTestCount) {

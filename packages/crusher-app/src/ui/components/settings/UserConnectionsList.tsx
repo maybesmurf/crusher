@@ -19,17 +19,14 @@ interface iUserConnectionItemProps {
 
 const getUserConnectionDesc = (userConnection: iUserConnection): any => {
 	if (userConnection.service === USER_CONNECTION_TYPE.GITHUB) {
-        const {
-            userName,
-            loginName
-        } = (userConnection as iGithubUserConnection).meta;
+		const { userName, loginName } = (userConnection as iGithubUserConnection).meta;
 
-        return (
+		return (
 			<span css={userConnectionDescCSS}>
 				{userName} (<a href={url.resolve("https://github.com/", loginName)}>@{loginName}</a>)
 			</span>
 		);
-    }
+	}
 	return null;
 };
 

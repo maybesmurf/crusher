@@ -6,13 +6,6 @@ import ProjectService from "../../core/services/ProjectService";
 import TestInstanceService from "../../core/services/TestInstanceService";
 import JobsService from "../../core/services/JobsService";
 
-const TEST_RESULT_STATUS = {
-	PASSED: "PASSED",
-	NO_REFERENCE_TEST: "NO_REFERENCE_TEST",
-	NO_TEST_INSTANCE: "NO_TEST_INSTANCE",
-	FAILED: "FAILED",
-};
-
 @Service()
 @JsonController("/test_instance")
 export class TestInstanceController {

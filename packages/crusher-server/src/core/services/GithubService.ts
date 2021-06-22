@@ -23,14 +23,20 @@ export default class GithubService {
 	}
 
 	async authenticateAsApp(installation_id: string) {
-		await this.octokit.auth({ type: "app" });
-		const {
-			data: { token },
-		} = await this.octokit.apps.createInstallationAccessToken({
+        await this.octokit.auth({ type: "app" });
+
+        const {
+            data
+        } = await this.octokit.apps.createInstallationAccessToken({
 			installation_id: parseInt(installation_id),
 		});
-		this.octokit = new Octokit({ auth: token });
-	}
+
+        const {
+            token
+        } = data;
+
+        this.octokit = new Octokit({ auth: token });
+    }
 
 	async updateRunCheckStatus(owner: string, repo: string, runId: string, status: string, conclusion = null) {
 		const values = conclusion ? { conclusion } : {};
@@ -57,28 +63,26 @@ export default class GithubService {
 	}
 
 	async createCheckRunFromJob(job) {
-		const { installation_id, repo_name, commit_id, id } = job;
-		if (!installation_id || !repo_name || !commit_id || !id) {
+        const { installation_id, repo_name, commit_id, id } = job;
+        if (!installation_id || !repo_name || !commit_id || !id) {
 			Logger.error(`GithubService::createCheckRunFromJob`, "Not enough data fro creating check run");
 			return false;
 		}
 
-		const owner_name = repo_name.split("/")[0];
-		const repo_original_name = repo_name.split("/")[1];
+        const [owner_name] = repo_name.split("/");
+        const repo_original_name = repo_name.split("/")[1];
 
-		if (!owner_name || !repo_original_name) {
+        if (!owner_name || !repo_original_name) {
 			Logger.error(`GithubService::createCheckRunFromJob`, "Not good repo name", {
 				repo_name,
 			});
 			return false;
 		}
 
-		const createCheckRunResponse = await this.createCheckRun(owner_name, repo_original_name, commit_id, installation_id, id);
-
-		const {
+        const {
 			data: { id: checkRunId },
-		} = createCheckRunResponse;
+		} = await this.createCheckRun(owner_name, repo_original_name, commit_id, installation_id, id);
 
-		return { checkRunId };
-	}
+        return { checkRunId };
+    }
 }

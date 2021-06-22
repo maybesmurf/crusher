@@ -1,0 +1,53 @@
+version: "2.2"
+services:
+  oss:
+#    image: "oss"
+    build:
+      context: ../../
+      dockerfile: docker/oss/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - LOGDNA=c7bdd500e3cfbfe457a2ec4168b8cfaa
+
+  mysql:
+    image: mariadb:10.3
+    container_name: crusher_mysql
+    restart: always
+    networks:
+      - crusher
+    ports:
+      - "3306:3306"
+    volumes:
+      - "~/.workspace/mysql:/var/lib/mysql:rw"
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_USERNAME:  'root'
+      MYSQL_DATABASE: 'crusher'
+
+  mongodb:
+    image: bitnami/mongodb:3.6.19
+    container_name: crusher_mongodb
+    restart: always
+    networks:
+      - crusher
+    ports:
+      - "27017:27017"
+    volumes:
+      - "~/.workspace/mongodb:/bitnami/mongodb:rw"
+    environment:
+      MONGODB_ROOT_PASSWORD: 'password'
+      MONGODB_USERNAME: 'root'
+      MONGODB_PASSWORD: 'password'
+      MONGODB_DATABASE: 'crusher'
+
+  redis:
+    image: redis:6.0.5-alpine
+    container_name: crusher-redis
+    restart: always
+    networks:
+      - crusher
+    ports:
+      - "6379:6379"
+    volumes:
+      - "~/.workspace/redis:/data:rw"

@@ -68,7 +68,7 @@ const MemberFilterTableList = (props: iMemberFilterTableListProps) => {
 	});
 
 	return (
-        <div css={containerCSS}>
+		<div css={containerCSS}>
 			<table css={tableCSS}>
 				<tr css={headerRowCSS}>
 					<th>{membersOut.length} people in crusher</th>
@@ -90,7 +90,7 @@ const MemberFilterTableList = (props: iMemberFilterTableListProps) => {
 				{membersOut}
 			</table>
 		</div>
-    );
+	);
 };
 
 const containerCSS = css`

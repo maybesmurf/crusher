@@ -137,9 +137,7 @@ const addRepoContainerCSS = css`
 `;
 
 ProjectIntegrationSettings.getInitialProps = async (ctx: any) => {
-	const {
-        req
-    } = ctx;
+	const { req } = ctx;
 	try {
 		let headers;
 		if (req) {
@@ -159,8 +157,8 @@ ProjectIntegrationSettings.getInitialProps = async (ctx: any) => {
 			slackIntegrations: slackIntegrations,
 		};
 	} catch (ex) {
-        throw ex;
-    }
+		throw ex;
+	}
 };
 
 export default withSession(WithSettingsLayout(ProjectIntegrationSettings));

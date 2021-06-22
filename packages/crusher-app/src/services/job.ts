@@ -25,7 +25,7 @@ export const getPaginationEndpoint = (endpoint: string, payload: any, headers = 
 };
 
 export const getAllProjectLogs = (projectId: number, headers = null) => {
-	const mockUrl = "https://api.jsonbin.io/b/60bdbcf19fc30168f1c6714e"
+	const mockUrl = "https://api.jsonbin.io/b/60bdbcf19fc30168f1c6714e";
 	return backendRequest(mockUrl || `/job/getLogsOfProject/${projectId}`, {
 		method: RequestMethod.GET,
 		headers: headers,

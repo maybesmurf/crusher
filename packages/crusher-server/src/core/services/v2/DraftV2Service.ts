@@ -35,7 +35,7 @@ export default class DraftV2Service {
 		};
 	}
 
-	getDraftLogs(draftId: number, logsAfter = 0): Promise<Array<iLiveStepLogs>> {
+	getDraftLogs(draftId: number, logsAfter = 0): Promise<iLiveStepLogs[]> {
 		return new Promise((resolve, reject) => {
 			TestLiveStepsLogs.find(
 				{
@@ -49,8 +49,8 @@ export default class DraftV2Service {
 						return log.toObject();
 					});
 
-					if (logs && logs.length) {
-						resolve(logs as Array<iLiveStepLogs>);
+					if (logs?.length) {
+						resolve(logs as iLiveStepLogs[]);
 					} else {
 						reject("No logs found");
 					}

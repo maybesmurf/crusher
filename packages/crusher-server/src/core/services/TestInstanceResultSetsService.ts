@@ -1,7 +1,6 @@
-import { Container, Inject, Service } from "typedi";
+import {Container, Service} from "typedi";
 import DBManager from "../manager/DBManager";
 import { TestInstanceResultSet } from "../interfaces/db/TestInstanceResultSet";
-import TestInstanceResultsService from "./TestInstanceResultsService";
 import { TestInstanceResultStatus } from "../interfaces/TestInstanceResultStatus";
 import { TestInstanceResultSetConclusion } from "../interfaces/TestInstanceResultSetConclusion";
 import { TestInstanceResult } from "../interfaces/db/TestInstanceResult";
@@ -15,7 +14,7 @@ export default class TestInstanceResultSetsService {
 		this.dbManager = Container.get(DBManager);
 	}
 
-	async getResultsOfInstanceSet(setId: number): Promise<Array<TestInstanceResult>> {
+	async getResultsOfInstanceSet(setId: number): Promise<TestInstanceResult[]> {
 		return this.dbManager.fetchData(`SELECT * FROM test_instance_results WHERE instance_result_set_id = ?`, [setId]);
 	}
 
@@ -49,10 +48,10 @@ export default class TestInstanceResultSetsService {
 	async updateResultSetStatus(setId: number, error) {
 		const results = await this.getResultsOfInstanceSet(setId);
 		const passedResults = results.filter((result) => {
-			return result.status == TestInstanceResultStatus.PASSED;
+			return result.status === TestInstanceResultStatus.PASSED;
 		});
 		const failedResults = results.filter((result) => {
-			return result.status == TestInstanceResultStatus.FAILED;
+			return result.status === TestInstanceResultStatus.FAILED;
 		});
 
 		const hasAllTestsPassed = passedResults.length === results.length;

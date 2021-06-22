@@ -27,7 +27,7 @@ export class CloudBucketManager {
 	}
 
 	verifyConnection() {
-		this.s3BucketService.listBuckets(function (err, data) {
+		this.s3BucketService.listBuckets(function(err) {
 			if (err) {
 				console.log("Couldn't connect to crusher S3", err);
 			} else {
@@ -63,7 +63,7 @@ export class CloudBucketManager {
 	}
 
 	upload(filePath, destination): Promise<string> {
-		return new Promise((resolve, reject) => {
+		return new Promise(() => {
 			const fileStream = fs.readFileSync(filePath);
 
 			return this.uploadBuffer(fileStream, destination);

@@ -46,31 +46,17 @@ function UserWelcomeInfo({ setFilledSurvey }: any) {
 		<>
 			<div css={modalHeading}>Welcome To Crusher</div>
 			<div css={illustrationContainer}>
-				<img
-					src={"/assets/img/illustration/welcome_illustration.png"}
-					css={welcomeIllustration}
-				/>
+				<img src={"/assets/img/illustration/welcome_illustration.png"} css={welcomeIllustration} />
 			</div>
 
 			<div css={optionContainer}>
 				<div css={selectionHeading}> What is your role?</div>
-				<DropDown
-					options={roleOptions}
-					width={"100%"}
-					onChange={setRole}
-					selected={role}
-				/>
+				<DropDown options={roleOptions} width={"100%"} onChange={setRole} selected={role} />
 			</div>
 
 			<div css={optionContainer}>
 				<div css={selectionHeading}>What brings you to crusher today?</div>
-				<DropDown
-					options={whyHereOption}
-					width={"100%"}
-					isMulti
-					onChange={setObjective}
-					selected={objective}
-				/>
+				<DropDown options={whyHereOption} width={"100%"} isMulti onChange={setObjective} selected={objective} />
 			</div>
 
 			<div css={bottomContainer}>
@@ -98,9 +84,7 @@ function FreeTrialIntro({ setFilledUserWelcome }: any) {
 	return (
 		<>
 			<div css={modalHeading}>Start your 21 Days Free Trial</div>
-			<div css={modalDescription}>
-				Experience power of no-code testing without any interruption
-			</div>
+			<div css={modalDescription}>Experience power of no-code testing without any interruption</div>
 
 			<div css={welcomeUserText}>👋 Welcome {userInfo.first_name}!</div>
 
@@ -113,10 +97,7 @@ function FreeTrialIntro({ setFilledUserWelcome }: any) {
 			<div css={shipContainer}>Let’s ship 🚀 on web faster with confidence.</div>
 
 			<div css={founderBlock}>
-				<img
-					css={founderImage}
-					src={"/assets/img/illustration/himanshu_illustrated.png"}
-				/>
+				<img css={founderImage} src={"/assets/img/illustration/himanshu_illustrated.png"} />
 
 				<div css={founderDescription}>
 					<div css={founderName}>Himanshu Dixit</div>
@@ -142,17 +123,9 @@ export const OnboardingPopup = () => {
 	// Close popup if both closed
 	useEffect(() => {});
 
-	const isSurveyFilled =
-		userInfo.user_meta.length > 0 &&
-		userInfo.user_meta.filter(
-			(item: any) => item.key_name === USER_STEP.SURVEY_FILLED,
-		).length === 1;
+	const isSurveyFilled = userInfo.user_meta.length > 0 && userInfo.user_meta.filter((item: any) => item.key_name === USER_STEP.SURVEY_FILLED).length === 1;
 
-	const isUserWelcomed =
-		userInfo.user_meta.length > 0 &&
-		userInfo.user_meta.filter(
-			(item: any) => item.key_name === USER_STEP.FREE_TRIAL,
-		).length === 1;
+	const isUserWelcomed = userInfo.user_meta.length > 0 && userInfo.user_meta.filter((item: any) => item.key_name === USER_STEP.FREE_TRIAL).length === 1;
 
 	// Based on API and current actions
 	const showPopup = !(isUserWelcomed && isSurveyFilled) && canPopupOpen;
@@ -161,12 +134,8 @@ export const OnboardingPopup = () => {
 	return (
 		<div css={overlay}>
 			<div css={modalContainer}>
-				{!isSurveyFilled && !filledSurvey ? (
-					<UserWelcomeInfo setFilledSurvey={setFilledSurvey} />
-				) : null}
-				{(isSurveyFilled || filledSurvey) && !isUserWelcomed ? (
-					<FreeTrialIntro setFilledUserWelcome={setFilledUserWelcome} />
-				) : null}
+				{!isSurveyFilled && !filledSurvey ? <UserWelcomeInfo setFilledSurvey={setFilledSurvey} /> : null}
+				{(isSurveyFilled || filledSurvey) && !isUserWelcomed ? <FreeTrialIntro setFilledUserWelcome={setFilledUserWelcome} /> : null}
 			</div>
 		</div>
 	);

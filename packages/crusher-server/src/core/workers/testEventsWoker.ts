@@ -9,7 +9,6 @@ import { JobStatus } from "../interfaces/JobStatus";
 import DraftInstanceResultsService from "../services/DraftInstanceResultsService";
 import TestInstanceScreenShotsService from "../services/TestInstanceScreenShotsService";
 import { Logger } from "../../utils/logger";
-import "reflect-metadata";
 import JobReportServiceV2 from "../services/v2/JobReportServiceV2";
 import { JobReportStatus } from "../interfaces/JobReportStatus";
 import { Job } from "bullmq";
@@ -21,11 +20,11 @@ import * as path from "path";
 
 const ReddisLock = require("redlock");
 
-async function prepareResultForTestInstance(instanceId, images, jobId, testId) {
+async function prepareResultForTestInstance(instanceId, images) {
 	const testInstanceScreenshotService = new TestInstanceScreenShotsService();
 
 	const screenshotsPromise = images.map((imageUrl) => {
-		const imageName = path.basename(imageUrl).split("?")[0];
+		const [imageName] = path.basename(imageUrl).split("?");
 
 		return testInstanceScreenshotService.addScreenshot({
 			instance_id: instanceId,
@@ -61,7 +60,7 @@ interface iTestRunnerProgressJob extends Job {
 export default class TestsEventsWorker {
 	private static Logger: any;
 
-	constructor(Logger) {}
+	constructor() {}
 
 	static async onTestCompleted(checkResultQueue, data: iTestRunnerJobOutput) {
 		const { runnerJobRequestInfo, error, output } = data;
@@ -73,12 +72,7 @@ export default class TestsEventsWorker {
 				if (runnerJobRequestInfo.requestType === RUNNER_REQUEST_TYPE.DRAFT) {
 					await prepareResultForDraftInstance(runnerJobRequestInfo.instanceId, output.signedImageUrls);
 				} else {
-					await prepareResultForTestInstance(
-						runnerJobRequestInfo.instanceId,
-						output.signedImageUrls,
-						runnerJobRequestInfo.job.id,
-						runnerJobRequestInfo.test.id,
-					);
+					await prepareResultForTestInstance(runnerJobRequestInfo.instanceId, output.signedImageUrls);
 
 					await checkResultQueue.add(runnerJobRequestInfo.test.id, {
 						error: error,
@@ -106,18 +100,15 @@ export default class TestsEventsWorker {
 
 					await prepareResultForDraftInstance(runnerJobRequestInfo.instanceId, output.signedImageUrls, !!error);
 				} else {
-					const job = runnerJobRequestInfo.job;
+					const {
+                        job
+                    } = runnerJobRequestInfo;
 
 					if (job) {
 						await jobsService.updateJobStatus(JobStatus.ABORTED, runnerJobRequestInfo.job.id);
 
 						try {
-							await prepareResultForTestInstance(
-								runnerJobRequestInfo.instanceId,
-								output.signedImageUrls,
-								runnerJobRequestInfo.job.id,
-								runnerJobRequestInfo.test.id,
-							);
+							await prepareResultForTestInstance(runnerJobRequestInfo.instanceId, output.signedImageUrls);
 
 							await checkResultQueue.add(runnerJobRequestInfo.test.id, {
 								error: error,
@@ -132,7 +123,7 @@ export default class TestsEventsWorker {
 								reportId: runnerJobRequestInfo.job.report_id,
 								platform: runnerJobRequestInfo.platform,
 							});
-						} catch (ex) {
+						} catch {
 							await jobReportsService.updateJobReportStatus(
 								JobReportStatus.FAILED,
 								runnerJobRequestInfo.job.report_id,

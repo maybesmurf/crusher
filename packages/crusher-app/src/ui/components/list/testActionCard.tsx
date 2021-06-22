@@ -45,15 +45,7 @@ interface iLoginActionCardProps {
 	forwardRef?: any;
 }
 export const LogActionCard = (props: iLoginActionCardProps) => {
-	const {
-        index,
-        action,
-        isActionCompleted,
-        isActionAborted,
-        style,
-        isLast,
-        forwardRef
-    } = props;
+	const { index, action, isActionCompleted, isActionAborted, style, isLast, forwardRef } = props;
 
 	return (
 		<div style={{ ...style, fontWeight: isActionCompleted ? 700 : 500 }} css={styles.container} ref={forwardRef}>

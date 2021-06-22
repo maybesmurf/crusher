@@ -34,7 +34,10 @@ export class MonitoringController {
 	@Post("/add/:projectId")
 	async addMonitoring(@CurrentUser({ required: true }) user, @Param("projectId") projectId: number, @Body() body: iAddMonitoringRequest) {
 		const { user_id } = user;
-		const { host, interval, tags } = body;
+		const {
+            host,
+            interval
+        } = body;
 
 		return this.monitoringService.addMonitoringForProject(
 			{
@@ -51,7 +54,7 @@ export class MonitoringController {
 
 	@Authorized()
 	@Get("/get/:projectId")
-	async getMonitoringList(@CurrentUser({ required: true }) user, @Param("projectId") projectId: number): Promise<Array<iMonitoringListResponse>> {
+	async getMonitoringList(@CurrentUser({ required: true }) user, @Param("projectId") projectId: number): Promise<iMonitoringListResponse[]> {
 		return this.monitoringService.getMonitoringListForProject(projectId);
 	}
 

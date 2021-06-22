@@ -4,7 +4,6 @@ import TestInstanceService from "../../../core/services/TestInstanceService";
 import JobsService from "../../../core/services/JobsService";
 import TestInstanceV2Service from "../../../core/services/v2/TestInstanceV2Service";
 import CommentsServiceV2 from "../../../core/services/v2/CommentsServiceV2";
-import TestInstanceResultsV2 from "../../../core/services/v2/TestInstanceResultsV2";
 import { TestLogsService } from "../../../core/services/mongo/testLogs";
 
 @Service()

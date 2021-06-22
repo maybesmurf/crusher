@@ -10,13 +10,11 @@ function renderBrowserList(onPlatformChanged, selectedBrowser = Platform.CHROME)
 	const browsers = [
 		{
 			name: Platform.CHROME,
-			icon:
-				"https://res.cloudinary.com/dnanbuigy/image/fetch/c_scale,h_30/q_99/https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Google_Chrome_icon_%28September_2014%29.svg/1200px-Google_Chrome_icon_%28September_2014%29.svg.png",
+			icon: "https://res.cloudinary.com/dnanbuigy/image/fetch/c_scale,h_30/q_99/https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Google_Chrome_icon_%28September_2014%29.svg/1200px-Google_Chrome_icon_%28September_2014%29.svg.png",
 		},
 		{
 			name: Platform.FIREFOX,
-			icon:
-				"https://res.cloudinary.com/dnanbuigy/image/fetch/c_scale,h_30/q_99/https://design.firefox.com/product-identity/firefox/firefox/firefox-logo.png",
+			icon: "https://res.cloudinary.com/dnanbuigy/image/fetch/c_scale,h_30/q_99/https://design.firefox.com/product-identity/firefox/firefox/firefox-logo.png",
 		},
 		{
 			name: Platform.SAFARI,
@@ -45,14 +43,10 @@ function renderBrowserList(onPlatformChanged, selectedBrowser = Platform.CHROME)
 	return <div css={styles.browserList}>{out}</div>;
 }
 
-const BaseHeader = ({
-    referenceJob,
-    onPlatformChanged,
-    platform
-}: any) => {
-    const [mobileMenu] = useState(false);
+const BaseHeader = ({ referenceJob, onPlatformChanged, platform }: any) => {
+	const [mobileMenu] = useState(false);
 
-    return (
+	return (
 		<div className={mobileMenu ? "navbar-nav-show" : ""}>
 			<header
 				className="navbar navbar-header navbar-header-fixed "

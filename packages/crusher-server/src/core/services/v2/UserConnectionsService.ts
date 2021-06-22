@@ -2,10 +2,9 @@ import { Service, Container } from "typedi";
 import DBManager from "../../manager/DBManager";
 import { createOAuthAppAuth } from "@octokit/auth-oauth-app";
 import { Authentication, TokenAuthentication } from "@octokit/auth-oauth-app/dist-types/types";
-import { Octokit, RestEndpointMethodTypes } from "@octokit/rest";
+import {Octokit} from "@octokit/rest";
 import { UserConnectionsMongoService } from "../mongo/userConnections";
 import { iUserConnection } from "@crusher-shared/types/mongo/userConnection";
-import { iGithubUserConnection } from "@crusher-shared/types/mongo/githubUserConnection";
 
 @Service()
 export default class UserConnectionsService {
@@ -39,7 +38,7 @@ export default class UserConnectionsService {
 		return this.userConnectionsMongoService.upsertGithubConnection(userId, githubUserInfo, tokenAuthentication);
 	}
 
-	async getListOfUserConnections(userId: number): Promise<Array<iUserConnection>> {
+	async getListOfUserConnections(userId: number): Promise<iUserConnection[]> {
 		return this.userConnectionsMongoService.getListOfUserConnections(userId);
 	}
 

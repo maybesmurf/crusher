@@ -5,9 +5,7 @@ function ProjectDashboard() {
 	return null;
 }
 
-ProjectDashboard.getInitialProps = async ({
-    res
-}) => {
+ProjectDashboard.getInitialProps = async ({ res }) => {
 	await redirectToFrontendPath("/app/project/dashboard", res);
 	return {};
 };

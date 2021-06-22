@@ -45,11 +45,11 @@ function Home() {
 			const { status } = res;
 			switch (status) {
 				case NO_TEAM_JOINED:
-                    return redirectToFrontendPath("/onboarding");
+					return redirectToFrontendPath("/onboarding");
 				case EMAIL_NOT_VERIFIED:
-                    return redirectToFrontendPath("/");
+					return redirectToFrontendPath("/");
 				case SIGNED_IN:
-                    return redirectToFrontendPath("/app/dashboard");
+					return redirectToFrontendPath("/app/dashboard");
 				case USER_NOT_REGISTERED:
 					alert("Wrong email or password");
 					break;
@@ -115,7 +115,9 @@ function Home() {
 					<a href={resolvePathToBackendURI("/v2/user/authenticate/google")} target={isIFrame ? "_blank" : "_self"} css={styles.loginGoogleLink}>
 						<div css={styles.googleLoginButton(theme)}>
 							<GoogleIcon width={"1.5rem"} height={"1.44rem"} />
-							<span className={"font-medium button"} style={{marginLeft: 12}}>Login with Google</span>
+							<span className={"font-medium button"} style={{ marginLeft: 12 }}>
+								Login with Google
+							</span>
 						</div>
 					</a>
 				</div>
@@ -256,36 +258,37 @@ const styles = {
 		color: ${getStyleFromObject(COMPONENTS.font.primary, theme)};
 	`,
 	registerButton: (theme) => css`
-    :hover {
-        text-decoration: none !important;
-    }
-    display: flex;
-    justify-content: center;
-    width: 100%;
+		:hover {
+			text-decoration: none !important;
+		}
+		display: flex;
+		justify-content: center;
+		width: 100%;
 
-    ${theme === "light" &&
-    `
+		${theme === "light" &&
+		`
      background: ${COLORS.dark1};
      color: ${COLORS.white};
     `}
 
-    ${theme === "dark" && `
+		${theme === "dark" &&
+		`
  background: ${COLORS.darkgrey};
  border: 1px solid ${COLORS.lightgrey};
  color: ${COLORS.white};
 `}
 
         border-radius: 5px;
-        font-size: 1.06rem;
-        padding: 1.13rem;
-        color: #fff;
-        cursor: pointer;
-        &:hover {
-            cursor: pointer;
-            color: #fff !important;
-            background: #23272f;
-        }
-    `,
+		font-size: 1.06rem;
+		padding: 1.13rem;
+		color: #fff;
+		cursor: pointer;
+		&:hover {
+			cursor: pointer;
+			color: #fff !important;
+			background: #23272f;
+		}
+	`,
 	passwordInput: css`
 		width: 100%;
 	`,

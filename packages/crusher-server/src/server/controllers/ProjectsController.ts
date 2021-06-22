@@ -40,7 +40,7 @@ export class ProjectsController {
 
 	@Authorized()
 	@Get("/getAll")
-	async getAllProjects(@CurrentUser({ required: true }) user): Promise<Array<iAllProjectsItemResponse>> {
+	async getAllProjects(@CurrentUser({ required: true }) user): Promise<iAllProjectsItemResponse[]> {
 		const { user_id } = user;
 
 		return this.projectService.getAllProjectsOfUser(user_id);
@@ -48,7 +48,9 @@ export class ProjectsController {
 
 	@Get("/testsCount/:projectId")
 	async getTestsCountInProject(@CurrentUser({ required: true }) user, @Param("projectId") projectId) {
-		const { user_id, team_id } = user;
+		const {
+            user_id
+        } = user;
 
 		const canAccessThisProject = await this.userService.canAccessProjectId(projectId, user_id);
 
@@ -76,8 +78,18 @@ export class ProjectsController {
 	@Post("/runTests/:projectId")
 	async runTestsInProject(@Param("projectId") projectId, @Req() req, @Body() body) {
 		try {
-			const { cliToken, host, branchName, commitId, repoName, commitName, platform, isFromGithub } = body;
-			const { user_id, team_id } = decodeToken(cliToken);
+			const {
+                cliToken,
+                host,
+                branchName,
+                commitId,
+                repoName,
+                commitName,
+                isFromGithub
+            } = body;
+			const {
+                user_id
+            } = decodeToken(cliToken);
 
 			const user = await this.userService.getUserInfo(user_id);
 			if (!user) {
@@ -132,7 +144,7 @@ export class ProjectsController {
 				trigger: TRIGGER.CLI,
 				githubInstallationId: job.installation_id,
 				testType: TestType.SAVED,
-				githubCheckRunId: checkRunId ? checkRunId : null,
+				githubCheckRunId: checkRunId || null,
 				host: host,
 				platform: job.platform,
 			});

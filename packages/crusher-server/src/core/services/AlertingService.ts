@@ -18,9 +18,9 @@ export default class AlertingService {
 
 	async createRowIfNotThere(userId) {
 		const row = await this.fetchRow(userId);
-		if (!!row === false) {
+		if (!row) {
 			await this.dbManager.insertData(`INSERT INTO alerting SET ?`, [{ user_id: userId }]);
-		}
+		};
 	}
 
 	async addGithubCode(code: string, userId: number) {

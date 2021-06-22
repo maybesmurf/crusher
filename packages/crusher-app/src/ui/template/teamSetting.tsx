@@ -5,7 +5,7 @@ import Link from "next/link";
 
 function LeftMenuComponent({ selected }) {
 	return (
-        <div>
+		<div>
 			<div css={styles.leftSection}>
 				<div css={styles.menuHeading}>Teams Settings</div>
 				{Object.entries(TEAM_SETTING_MENU_ITEMS).map(([key, value]) => {
@@ -22,7 +22,7 @@ function LeftMenuComponent({ selected }) {
 				})}
 			</div>
 		</div>
-    );
+	);
 }
 
 export function TeamSettingsTemplate({ selected, children }) {

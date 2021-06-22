@@ -5,7 +5,7 @@ import TestService from "../../core/services/TestService";
 import ClIService from "../../core/services/ClIService";
 import { appendParamsToURI } from "../../utils/url";
 import AlertingService from "../../core/services/AlertingService";
-import JobsService, { TRIGGER } from "../../core/services/JobsService";
+import JobsService from "../../core/services/JobsService";
 import UserService from "../../core/services/UserService";
 import { Logger } from "../../utils/logger";
 import { resolvePathToFrontendURI } from "../../core/utils/uri";
@@ -59,7 +59,9 @@ export class AlertingController {
 
 	@Post("/hooks/reciever")
 	async hookReciever(@Body() body) {
-		const { check_suite, action, installation, repositories } = body;
+		const {
+            action
+        } = body;
 		Logger.info("AlertingController::hookReceiver", `Received webhook from github: (${action})`);
 
 		return body;
@@ -68,24 +70,24 @@ export class AlertingController {
 	@Get("/add/slack")
 	async addSlackCallback(@CurrentUser({ required: true }) user, @QueryParams() params, @Res() res) {
 		try {
-			const { user_id, team_id } = user;
+			const {
+                user_id
+            } = user;
 			const { code, state: project_id } = params;
 			const integrationConfig = await this.alertingService.getSlackAccessConfig(code);
-			if (!integrationConfig || integrationConfig.ok === false) {
+			if (!integrationConfig || !integrationConfig.ok) {
 				throw new Error("Not valid request");
 			}
 
 			const { insertId: integrationId } = await this.alertingService.addSlackIntegration(integrationConfig, user_id);
 			await this.alertingService.addAlertIntegrationToProject(integrationId, project_id, user_id, integrationConfig);
-		} catch (ex) {}
+		} catch {}
 		res.redirect(resolvePathToFrontendURI("app/project/settings/alerting"));
 		return;
 	}
 
 	@Get("/getSlackIntegrations/:project_id")
 	async getSlackIntegrationForProject(@CurrentUser({ required: true }) user, @Param("project_id") project_id: number) {
-		const { user_id, team_id } = user;
-
-		return this.alertingService.getSlackIntegrationsInProject(project_id);
-	}
+        return this.alertingService.getSlackIntegrationsInProject(project_id);
+    }
 }

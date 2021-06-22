@@ -5,7 +5,7 @@ import React from "react";
 
 function LeftMenuComponent({ selected }) {
 	return (
-        <div css={styles.leftSection}>
+		<div css={styles.leftSection}>
 			<div css={styles.menuHeading}>Project Settings</div>
 			{Object.entries(PROJECT_MENU_ITEMS).map(([key, value]) => {
 				const isSelected = value === selected;
@@ -20,7 +20,7 @@ function LeftMenuComponent({ selected }) {
 				);
 			})}
 		</div>
-    );
+	);
 }
 
 export function ProjectSettingsTemplate({ selected, children, heading }) {

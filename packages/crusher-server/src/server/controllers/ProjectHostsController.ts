@@ -5,7 +5,6 @@ import UserService from "../../core/services/UserService";
 import ProjectHostsService from "../../core/services/ProjectHostsService";
 import ProjectService from "../../core/services/ProjectService";
 import { iHostListResponse } from "@crusher-shared/types/response/hostListResponse";
-import JobRunnerService from "../../core/services/v2/JobRunnerService";
 
 @Service()
 @JsonController("/hosts")
@@ -40,7 +39,7 @@ export class ProjectHostsController {
 			projectId,
 			userId: user_id,
 		});
-		if (host && host.insertId) {
+		if (host?.insertId) {
 			return { status: "CREATED_HOST", hostId: host.insertId };
 		} else {
 			return { status: "CREATE_HOST_FAILED" };
@@ -49,7 +48,7 @@ export class ProjectHostsController {
 
 	@Authorized()
 	@Get("/getAll/:projectId")
-	async getAllHosts(@CurrentUser({ required: true }) user, @Param("projectId") projectId): Promise<Array<iHostListResponse>> {
+	async getAllHosts(@CurrentUser({ required: true }) user, @Param("projectId") projectId): Promise<iHostListResponse[]> {
 		return this.projectHostService.getAllHosts(projectId);
 	}
 

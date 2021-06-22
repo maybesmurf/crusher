@@ -1,7 +1,6 @@
 import { TestType } from "../interfaces/TestType";
 import TestInstanceRecordingService from "../services/TestInstanceRecordingService";
 import DraftInstanceResultsService from "../services/DraftInstanceResultsService";
-import "reflect-metadata";
 import { Container } from "typedi";
 
 const testInstanceRecordingService = Container.get(TestInstanceRecordingService);

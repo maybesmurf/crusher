@@ -40,24 +40,25 @@ export class JobsController {
 	@Authorized()
 	@Get("/getProjectsJob/:projectId")
 	async getAllJobs(@Param("projectId") projectId: number, @QueryParams() queries) {
-		let { page, category, itemsPerPage } = queries;
-		page = !page || page < 1 ? 1 : page;
-		let trigger = null;
-		if (parseInt(category) === 1) {
+        let { page, category, itemsPerPage } = queries;
+        if (!page || page < 1)
+            page = 1;
+        let trigger = null;
+        if (parseInt(category) === 1) {
 			trigger = JobTrigger.MONITORING;
 		} else if (parseInt(category) === 2) {
 			trigger = JobTrigger.MANUAL;
 		}
-		const totalCount = await this.jobsService.getTotalJobs(projectId, trigger);
+        const totalCount = await this.jobsService.getTotalJobs(projectId, trigger);
 
-		let jobRecords = await this.jobsService.getAllJobsOfProject(
+        let jobRecords = await this.jobsService.getAllJobsOfProject(
 			projectId,
 			trigger,
-			itemsPerPage ? itemsPerPage : 5,
-			(page - 1) * (itemsPerPage ? itemsPerPage : 5),
+			itemsPerPage || 5,
+			(page - 1) * ((itemsPerPage || 5)),
 		);
 
-		for (let i = 0; i < jobRecords.length; i++) {
+        for (let i = 0; i < jobRecords.length; i++) {
 			jobRecords[i].screenshotCount = await this.jobsService.getTotalScreenshotsInJob(jobRecords[i].id);
 
 			const referenceJob = await this.jobsService.getReferenceJob(jobRecords[i]);
@@ -80,13 +81,13 @@ export class JobsController {
 			}
 		}
 
-		return {
+        return {
 			jobs: jobRecords,
 			category: category,
 			trigger: trigger,
 			totalPages: Math.ceil(totalCount / 5),
 		};
-	}
+    }
 
 	@Authorized()
 	@Get("/getLogsOfProject/:projectId")
@@ -97,22 +98,21 @@ export class JobsController {
 	@Authorized()
 	@Get("/getVisualDiffsWithFirstJob/:jobId")
 	async getVisualDiffs(@CurrentUser({ required: true }) user, @Param("jobId") jobId) {
-		const { user_id } = user;
-		const currentJob = await this.jobsService.getJob(jobId);
-		const referenceJob = await this.jobsService.getFirstJobOfHost(currentJob.host);
+        const currentJob = await this.jobsService.getJob(jobId);
+        const referenceJob = await this.jobsService.getFirstJobOfHost(currentJob.host);
 
-		const currentInstances = await this.testInstanceService.getAllInstancesWithResultByJobId(jobId, Platform.CHROME, currentJob.host);
+        const currentInstances = await this.testInstanceService.getAllInstancesWithResultByJobId(jobId, Platform.CHROME, currentJob.host);
 
-		const referenceInstances = referenceJob && (await this.testInstanceService.getAllInstancesWithResultByJobId(referenceJob.id));
-		let referenceInstancesMap = {};
-		if (referenceInstances) {
+        const referenceInstances = referenceJob && (await this.testInstanceService.getAllInstancesWithResultByJobId(referenceJob.id));
+        let referenceInstancesMap = {};
+        if (referenceInstances) {
 			for (let referenceInstance of referenceInstances) {
 				referenceInstancesMap[referenceInstance.test_id] = referenceInstance;
 			}
 		}
 
-		const imagesMap = {};
-		for (let currentInstance of currentInstances) {
+        const imagesMap = {};
+        for (let currentInstance of currentInstances) {
 			const imagesList = [];
 			const currentImages = JSON.parse(currentInstance.images);
 
@@ -139,8 +139,8 @@ export class JobsController {
 			}
 			imagesMap[currentInstance.test_id] = imagesList;
 		}
-		return { currentInstances, referenceInstancesMap, images: imagesMap };
-	}
+        return { currentInstances, referenceInstancesMap, images: imagesMap };
+    }
 
 	@Authorized()
 	@Get("/approve/tests/all/:jobId")

@@ -4,7 +4,6 @@ import { JobBuild } from "../interfaces/db/JobBuild";
 import { JobTrigger } from "../interfaces/JobTrigger";
 import { JobStatus } from "../interfaces/JobStatus";
 import { InsertRecordResponse } from "../interfaces/services/InsertRecordResponse";
-import { JobConclusion } from "../interfaces/JobConclusion";
 
 export const TRIGGER = {
 	MANUAL: "MANUAL",
@@ -221,8 +220,8 @@ export default class JobsService {
 
 		const insertedJob: InsertRecordResponse = await this.createJob({
 			project_id: projectId,
-			trigger: trigger ? trigger : JobTrigger.MANUAL,
-			host: host ? host : null,
+			trigger: trigger || JobTrigger.MANUAL,
+			host: host || null,
 			status: JobStatus.QUEUED,
 			pr_id: null,
 			branch_name: branchName,

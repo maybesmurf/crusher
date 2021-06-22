@@ -20,7 +20,7 @@ const projects = (state = initialState, action) => {
 		case SET_CURRENT_PROJECT_INFO:
 			return { ...state, currentProjectInfo: action.payload.info };
 		case SET_PROJECT_MEMBERS: {
-			const _membersMap = ((action.payload.members as iMemberInfoResponse[])).reduce((prev, current) => {
+			const _membersMap = (action.payload.members as iMemberInfoResponse[]).reduce((prev, current) => {
 				return { ...prev, [current.id]: current };
 			}, {});
 
@@ -46,7 +46,7 @@ const projects = (state = initialState, action) => {
 			}
 			return { ...state, selectedProject: action.projectId };
 		case ADD_PROJECT:
-            return {
+			return {
 				...state,
 				allProjects: [...state.allProjects, { name: action.name, id: action.id }],
 			};

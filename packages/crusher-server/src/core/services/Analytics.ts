@@ -18,7 +18,7 @@ const analytics = new Analytics("YmhV4TwBMwQ07rQdQPZVNnZLYmS4uNIf");
 export default class SentryService implements TSentryTracking {
 	private readonly userId: string | null;
 
-	constructor(userId: string | null, teamId: string | null, projectId: string | null) {
+	constructor(userId: string | null) {
 		this.userId = userId;
 		// If open source, get mac id
 		analytics.identify({ userId });

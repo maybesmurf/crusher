@@ -328,8 +328,8 @@ export function withSidebarLayout(WrappedComponent: NextPage<any>, shouldHaveGet
 
 		const options = userInfo
 			? projectsList?.map((project) => {
-              return { label: project.name, value: project.id };
-        })
+					return { label: project.name, value: project.id };
+			  })
 			: [];
 
 		function onProjectChange(project: iSelectOption) {

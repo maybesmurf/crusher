@@ -1,6 +1,5 @@
 import { Service, Container } from "typedi";
 import DBManager from "../manager/DBManager";
-import { TEAM_CREATED, TEAM_CREATION_FAILED } from "../../constants";
 import { CreateTestInstanceRequest } from "../interfaces/services/test/CreateTestInstanceRequest";
 import { Platform } from "../interfaces/Platform";
 import JobsService from "./JobsService";
@@ -74,7 +73,7 @@ export default class TestInstanceService {
 
 		return this.dbManager.fetchData(
 			`SELECT test_instances.id instanceID, test_instance_results.id resultId, test_instances.job_id jobId, test_instance_result_sets.id resultSetId, test_instances.platform instancePlatfrom, tests.name testName, tests.id testId, test_instance_results.id testInstanceResultId, test_instance_results.diff_delta diffDelta, test_instance_results.diff_image_url diffUrl, test_instance_results.status resultStatus, test_instance_results.target_screenshot_id targetScreenshotId, test_instance_screenshots.id screenshotId, test_instance_screenshots.name screenshotName, test_instance_screenshots.url screenshotUrl FROM test_instances, test_instance_screenshots, tests, test_instance_result_sets LEFT JOIN test_instance_results ON test_instance_result_sets.id = test_instance_results.instance_result_set_id WHERE test_instances.job_id = ? AND test_instance_result_sets.instance_id = test_instances.id AND test_instance_result_sets.target_job_id = ? AND test_instance_screenshots.id = test_instance_results.screenshot_id AND tests.id =  test_instances.test_id AND test_instances.platform = ?`,
-			[job.id, referenceJobId ? referenceJobId : job.id, platform],
+			[job.id, referenceJobId || job.id, platform],
 		);
 	}
 
@@ -84,7 +83,7 @@ export default class TestInstanceService {
 
 		return this.dbManager.fetchData(
 			`SELECT test_instances.id instanceID, test_instance_results.id resultId, test_instances.job_id jobId, test_instance_result_sets.id resultSetId, test_instances.platform instancePlatfrom, tests.name testName, tests.id testId, test_instance_results.id testInstanceResultId, test_instance_results.diff_delta diffDelta, test_instance_results.diff_image_url diffUrl, test_instance_results.status resultStatus, test_instance_results.target_screenshot_id targetScreenshotId, test_instance_screenshots.id screenshotId, test_instance_screenshots.name screenshotName, test_instance_screenshots.url screenshotUrl FROM test_instances, test_instance_screenshots, tests, test_instance_result_sets LEFT JOIN test_instance_results ON test_instance_result_sets.id = test_instance_results.instance_result_set_id WHERE test_instances.job_id = ? AND test_instance_result_sets.instance_id = test_instances.id AND test_instance_result_sets.target_job_id = ? AND test_instance_screenshots.id = test_instance_results.screenshot_id AND tests.id =  test_instances.test_id`,
-			[job.id, referenceJobId ? referenceJobId : referenceJob ? referenceJob.id : job.id],
+			[job.id, referenceJobId || (referenceJob ? referenceJob.id : job.id)],
 		);
 	}
 }

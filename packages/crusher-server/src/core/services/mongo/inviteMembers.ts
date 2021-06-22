@@ -65,7 +65,7 @@ export class InviteMembersService {
 		projectId: number,
 		teamId: number,
 		expiresOn: Date | null = null,
-		emails: Array<string> | null = null,
+		emails: string[] | null = null,
 		meta: any = {},
 	): Promise<string> {
 		return new Promise((resolve, reject) => {
@@ -84,7 +84,7 @@ export class InviteMembersService {
 		});
 	}
 
-	createTeamInviteCode(teamId: number, expiresOn: Date | null = null, emails: Array<string> | null = null, meta: any = {}): Promise<string> {
+	createTeamInviteCode(teamId: number, expiresOn: Date | null = null, emails: string[] | null = null, meta: any = {}): Promise<string> {
 		return new Promise((resolve, reject) => {
 			new TeamInviteReferrals({
 				teamId: teamId,

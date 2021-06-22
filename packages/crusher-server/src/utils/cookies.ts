@@ -6,7 +6,7 @@ export function setUserCookie(cookie, options = {}, res) {
 	if (!res) {
 		throw new Error("Response object is null.");
 	}
-	res.cookie(cookie.key, cookie.value, { ...options });
+	res.cookie(cookie.key, cookie.value, options);
 }
 
 export function setUserAuthorizationCookies(token: string, res) {

@@ -48,8 +48,10 @@ export class EmailManager {
 		EmailManager.sendEmail(to, serverEmailInfo, "[Crusher.dev] Verify your account", emailHTML);
 	}
 
-	public static sendInvitations(members: Array<string>, inviteReferral: iInviteReferral, metaInfo: { orgName: string; adminName: string }) {
-		const { orgName, adminName } = metaInfo;
+	public static sendInvitations(members: string[], inviteReferral: iInviteReferral, metaInfo: { orgName: string; adminName: string }) {
+		const {
+            adminName
+        } = metaInfo;
 		return new Promise((resolve, reject) => {
 			const inviteLinkUrl = new URL(resolvePathToFrontendURI(`/get-started`));
 			inviteLinkUrl.searchParams.append("inviteType", inviteReferral.type);

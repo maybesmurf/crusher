@@ -30,11 +30,7 @@ function RenderItem(props) {
 	);
 }
 function List(props) {
-	const {
-        onClick,
-        onDeleteItem,
-        items
-    } = props;
+	const { onClick, onDeleteItem, items } = props;
 
 	const itemsOut = items.map((item) => {
 		return <RenderItem onClick={onClick} onDeleteItem={onDeleteItem} item={item} />;

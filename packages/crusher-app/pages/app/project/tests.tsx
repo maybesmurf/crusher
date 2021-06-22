@@ -2,11 +2,7 @@ import { css } from "@emotion/core";
 import { withSidebarLayout } from "@hoc/withSidebarLayout";
 import withSession from "@hoc/withSession";
 import { getCookies } from "@utils/cookies";
-import {
-	_deleteTest,
-	getAllTestsInfosInProject,
-	updateTestName,
-} from "@services/test";
+import { _deleteTest, getAllTestsInfosInProject, updateTestName } from "@services/test";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
@@ -45,10 +41,7 @@ function RenderInputName(props: any) {
 		if (mode === INPUT_MODE.RENAME) {
 			setLastValue(inputRef.current.innerText);
 			inputRef.current.focus();
-			setCurrentCursorPositionInContentEditable(
-				inputRef.current,
-				inputRef.current.innerText.length,
-			);
+			setCurrentCursorPositionInContentEditable(inputRef.current, inputRef.current.innerText.length);
 		}
 	}, [mode]);
 
@@ -63,13 +56,7 @@ function RenderInputName(props: any) {
 	return (
 		<>
 			<Conditional If={mode === INPUT_MODE.RENAME}>
-				<div
-					ref={inputRef}
-					onKeyPress={handleKeyPress as any}
-					contentEditable={true}
-					css={styles.testName}
-					onFocusOut={handleInputBlur}
-				>
+				<div ref={inputRef} onKeyPress={handleKeyPress as any} contentEditable={true} css={styles.testName} onFocusOut={handleInputBlur}>
 					{name}
 				</div>
 			</Conditional>
@@ -81,13 +68,7 @@ function RenderInputName(props: any) {
 }
 
 function TestCard(props) {
-	const {
-        name,
-        userName,
-        id,
-        featured_video_uri,
-        createdAt
-    } = props;
+	const { name, userName, id, featured_video_uri, createdAt } = props;
 	const [testName, setTestName] = useState(name);
 	const videoRef = useRef(null);
 	const [testNameMode, setTestNameMode] = useState(INPUT_MODE.VISIBLE_NAME);
@@ -102,10 +83,7 @@ function TestCard(props) {
 	}
 
 	useEffect(() => {
-		if (
-			videoRef?.current &&
-			videoRef.current.tagName.toLowerCase() === "video"
-		) {
+		if (videoRef?.current && videoRef.current.tagName.toLowerCase() === "video") {
 			videoRef.current.addEventListener(
 				"loadedmetadata",
 				function () {
@@ -184,11 +162,7 @@ function TestCard(props) {
 				<div css={styles.testCardContentContainer}>
 					<div css={styles.testCardInfo}>
 						<div css={testCardNameContainerCSS}>
-							<RenderInputName
-								setTestNameCallback={setTestNameCallback}
-								name={testName}
-								mode={testNameMode}
-							/>
+							<RenderInputName setTestNameCallback={setTestNameCallback} name={testName} mode={testNameMode} />
 							<div css={editIconCSS} onClick={editInputName}>
 								<EditIcon css={editIconSVGCSS} />
 							</div>
@@ -252,12 +226,7 @@ function RenderTestCard(props) {
 
 	const finalOut = tests.reduce(function (prev, current, index) {
 		if (index % 4 === 0) {
-			const rowItems = [
-				tests[index],
-				tests[index + 1],
-				tests[index + 2],
-				tests[index + 3],
-			]
+			const rowItems = [tests[index], tests[index + 1], tests[index + 2], tests[index + 3]]
 				.filter((val) => {
 					return typeof val !== "undefined";
 				})
@@ -292,9 +261,7 @@ function ProjectTestsList(props) {
 	const projectsList = useSelector(getProjects);
 	const selectedProjectId = useSelector(getSelectedProject);
 	const [showCreateTestModal, setShouldShowCreateTestModal] = useState(false);
-	const [showInstallExtensionModal, setShowInstallExtensionModal] = useState(
-		false,
-	);
+	const [showInstallExtensionModal, setShowInstallExtensionModal] = useState(false);
 	const selectedProject = projectsList.find((project) => {
 		return project.id === selectedProjectId;
 	});
@@ -323,17 +290,10 @@ function ProjectTestsList(props) {
 	};
 
 	return (
-		<div
-			css={[
-				styles.container,
-				isTestsPresent ? containerPaddingCSS : emptyTestContainerPaddingCSS,
-			]}
-		>
+		<div css={[styles.container, isTestsPresent ? containerPaddingCSS : emptyTestContainerPaddingCSS]}>
 			<Conditional If={isTestsPresent}>
 				<>
-					<div css={styles.heading}>
-						{selectedProject ? selectedProject.name : "Tests List"}
-					</div>
+					<div css={styles.heading}>{selectedProject ? selectedProject.name : "Tests List"}</div>
 					<RenderTestCard tests={projectTests} />
 				</>
 			</Conditional>
@@ -341,15 +301,8 @@ function ProjectTestsList(props) {
 				<EmptyTestListContainer onCreateTest={handleCreateTest} />
 			</Conditional>
 
-			<InstallExtensionModal
-				isOpen={showInstallExtensionModal}
-				onClose={closeInstallExtensionModal}
-				onExtensionDownloaded={handleExtensionDownloaded}
-			/>
-			<CreateTestModal
-				isOpen={showCreateTestModal}
-				onClose={closeCreateTestModal}
-			/>
+			<InstallExtensionModal isOpen={showInstallExtensionModal} onClose={closeInstallExtensionModal} onExtensionDownloaded={handleExtensionDownloaded} />
+			<CreateTestModal isOpen={showCreateTestModal} onClose={closeCreateTestModal} />
 		</div>
 	);
 }
@@ -504,10 +457,7 @@ const editIconSVGCSS = css`
 `;
 
 ProjectTestsList.getInitialProps = async (ctx) => {
-	const {
-        req,
-        store
-    } = ctx;
+	const { req, store } = ctx;
 	try {
 		let headers;
 		if (req) {
@@ -518,19 +468,14 @@ ProjectTestsList.getInitialProps = async (ctx) => {
 		const cookies = getCookies(req);
 		const defaultProject = getSelectedProject(store.getState());
 
-		const selectedProject = JSON.parse(
-			cookies.selectedProject || null,
-		);
-		const tests = await getAllTestsInfosInProject(
-			selectedProject || defaultProject,
-			headers,
-		);
+		const selectedProject = JSON.parse(cookies.selectedProject || null);
+		const tests = await getAllTestsInfosInProject(selectedProject || defaultProject, headers);
 		return {
 			tests: tests && Array.isArray(tests) ? tests : [],
 		};
 	} catch (er) {
-        throw er;
-    }
+		throw er;
+	}
 };
 
 export default withSession(withSidebarLayout(ProjectTestsList));

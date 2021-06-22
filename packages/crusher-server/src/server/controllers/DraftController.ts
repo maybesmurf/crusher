@@ -1,4 +1,4 @@
-import { JsonController, Get, Authorized, CurrentUser, Body, Post, Param, Res, BadRequestError } from "routing-controllers";
+import {JsonController, Get, Authorized, CurrentUser, Body, Post, Param, BadRequestError} from "routing-controllers";
 import { Service, Container, Inject } from "typedi";
 import DBManager from "../../core/manager/DBManager";
 import UserService from "../../core/services/UserService";
@@ -44,9 +44,8 @@ export class DraftController {
 	@Authorized()
 	@Get("/get/:draftId")
 	async getTest(@CurrentUser({ required: true }) user, @Param("draftId") draftId) {
-		const { user_id } = user;
-		return this.draftService.getDraftTest(draftId);
-	}
+        return this.draftService.getDraftTest(draftId);
+    }
 
 	@Authorized()
 	@Post("/createAndRun")
@@ -54,7 +53,7 @@ export class DraftController {
 		const { user_id } = user;
 		const { testName, projectId, events, code } = body;
 		const draft = await this.draftService.createDraftTest({
-			name: testName ? testName : "",
+			name: testName || "",
 			events: JSON.stringify(events),
 			code: code,
 			user_id,
@@ -76,8 +75,8 @@ export class DraftController {
 	}
 
 	@Authorized()
-	@Post("/getLastInstanceStatus/:draftId")
-	async getStatus(@CurrentUser({ required: true }) user: iUser, @Param("draftId") draftId: number, @Body() body, @Res() res) {
+    @Post("/getLastInstanceStatus/:draftId")
+    async getStatus(@CurrentUser({ required: true }) user: iUser, @Param("draftId") draftId: number, @Body() body) {
 		const { logsAfter } = body;
 		let count = 0;
 		const lastInstance = await this.draftInstanceService.getRecentDraftInstance(draftId);

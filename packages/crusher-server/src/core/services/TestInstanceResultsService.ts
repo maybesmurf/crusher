@@ -2,7 +2,6 @@ import { Service, Container } from "typedi";
 import DBManager from "../manager/DBManager";
 import { TestInstanceResult } from "../interfaces/db/TestInstanceResult";
 import { TestInstanceResultStatus } from "../interfaces/TestInstanceResultStatus";
-import { JobBuild } from "../interfaces/db/JobBuild";
 import TestInstanceResultSetsService from "./TestInstanceResultSetsService";
 import { Platform } from "../interfaces/Platform";
 
@@ -20,7 +19,7 @@ export default class TestInstanceService {
 		return this.dbManager.insertData(`INSERT INTO test_instance_results SET ?`, details);
 	}
 
-	async getResultsOfInstanceSet(setId: number): Promise<Array<TestInstanceResult>> {
+	async getResultsOfInstanceSet(setId: number): Promise<TestInstanceResult[]> {
 		return this.dbManager.fetchData(`SELECT * FROM test_instance_results WHERE instance_result_set_id = ?`, [setId]);
 	}
 
@@ -38,7 +37,7 @@ export default class TestInstanceService {
 
 		const out = await Promise.all(updatePromisesArr);
 		const resultSetArr = out.filter(function (item, pos) {
-			return out.indexOf(item) == pos;
+			return out.indexOf(item) === pos;
 		});
 		for (let i = 0; i < resultSetArr.length; i++) {
 			await this.testInstanceResultSetsService.updateResultSetStatus(resultSetArr[i] as number, null);
@@ -64,7 +63,7 @@ export default class TestInstanceService {
 
 		const out = await Promise.all(updatePromisesArr);
 		const resultSetArr = out.filter(function (item, pos) {
-			return out.indexOf(item) == pos;
+			return out.indexOf(item) === pos;
 		});
 		for (let i = 0; i < resultSetArr.length; i++) {
 			await this.testInstanceResultSetsService.updateResultSetStatus(resultSetArr[i] as number, null);

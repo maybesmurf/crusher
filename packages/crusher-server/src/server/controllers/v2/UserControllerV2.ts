@@ -76,7 +76,10 @@ export class UserControllerV2 {
 	 */
 	@Post("/signup")
 	async createUser(@Body() userInfo: iSignupUserRequest, @Res() res) {
-		const { firstName, lastName, email, password, inviteReferral } = userInfo;
+		const {
+            email,
+            inviteReferral
+        } = userInfo;
 
 		const userId = await this.userService.createUserRecord(userInfo, false);
 		const { teamId } = inviteReferral
@@ -96,25 +99,26 @@ export class UserControllerV2 {
 	 */
 	@Get("/authenticate/google/callback")
 	async googleCallback(@QueryParam("code") code: string, @QueryParam("state") encodedState, @Res() res) {
-		const { tokens } = await oauth2Client.getToken(code);
-		const accessToken = tokens.access_token;
-		let inviteCode, inviteType;
-		try {
+        const { tokens } = await oauth2Client.getToken(code);
+        const accessToken = tokens.access_token;
+        let inviteCode;
+        let inviteType;
+        try {
 			const jsonStr = Buffer.from(encodedState, "base64").toString("hex");
 			const state = JSON.parse(jsonStr);
 			inviteCode = state.inviteCode;
 			inviteType = state.inviteType;
-		} catch (err) {}
+		} catch {}
 
-		this.googleAPIService.setAccessToken(accessToken);
-		const profileInfo = await this.googleAPIService.getProfileInfo();
-		const { email, family_name, given_name } = profileInfo as any;
+        this.googleAPIService.setAccessToken(accessToken);
+        const profileInfo = await this.googleAPIService.getProfileInfo();
+        const { email, family_name, given_name } = profileInfo as any;
 
-		const user = await this.userService.getUserByEmail(email);
-		let userId = user ? user.id : null;
-		let teamId = user ? user.team_id : null;
+        const user = await this.userService.getUserByEmail(email);
+        let userId = user ? user.id : null;
+        let teamId = user ? user.team_id : null;
 
-		if (!user) {
+        if (!user) {
 			const inviteReferral = inviteType && inviteCode ? { type: inviteType, code: inviteCode } : null;
 
 			const signUpUserInfo = {
@@ -132,8 +136,7 @@ export class UserControllerV2 {
 			teamId = _teamId;
 		}
 
-		const token = await this.userService.setUserAuthCookies(userId, teamId, res);
-		res.redirect(resolvePathToFrontendURI("/"));
-		return true;
-	}
+        res.redirect(resolvePathToFrontendURI("/"));
+        return true;
+    }
 }

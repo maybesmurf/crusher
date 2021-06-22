@@ -1,8 +1,4 @@
-function createRange(
-	node: Node,
-	chars: { count: number },
-	range: Range | null = null,
-): Range {
+function createRange(node: Node, chars: { count: number }, range: Range | null = null): Range {
 	if (!range) {
 		range = document.createRange();
 		range.selectNode(node);
@@ -33,21 +29,18 @@ function createRange(
 	return range;
 }
 
-function setCurrentCursorPositionInContentEditable(
-	root: HTMLElement,
-	chars: number,
-) {
+function setCurrentCursorPositionInContentEditable(root: HTMLElement, chars: number) {
 	if (chars >= 0) {
-        const range = createRange(root.parentNode!, {
+		const range = createRange(root.parentNode!, {
 			count: chars,
 		});
 
-        if (range) {
+		if (range) {
 			range.collapse(false);
 			selection!.removeAllRanges();
 			selection!.addRange(range);
 		}
-    }
+	}
 }
 
 export { setCurrentCursorPositionInContentEditable };

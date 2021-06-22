@@ -4,9 +4,9 @@ import { fetchProjectsFromServer } from "@redux/thunks/projects";
 import dynamic from "next/dynamic";
 import { getCookies, getMetaFromReq, isUserLoggedInFromCookies } from "@utils/cookies";
 import { PersistGate } from "redux-persist/integration/react";
-import { Provider } from "react-redux";
+import { Provider, ReactReduxContext } from 'react-redux';
 import { _fetchUserInfo } from "@services/user";
-import {NextApiRequest} from "next";
+import { NextApiRequest } from "next";
 import { getThemeFromCookieOrReq } from "@utils/styleUtils";
 import { ToastDialog } from "@ui/atom/toastDialog";
 import { AppContext, AppProps } from "next/app";
@@ -15,6 +15,7 @@ import { saveProjectsInRedux, saveSelectedProjectInRedux } from "@redux/actions/
 import { ANALYTICS } from "@services/analytics";
 import Modal from "react-modal";
 import "../src/tailwind.css";
+import { ThemeContext } from '@emotion/react';
 
 Modal.setAppElement("#__next");
 

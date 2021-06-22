@@ -2,13 +2,9 @@ import { css } from "@emotion/core";
 import { withSidebarLayout } from "@hoc/withSidebarLayout";
 import withSession from "@hoc/withSession";
 import { getCookies } from "@utils/cookies";
-import {
-	getAllJobsOfProject,
-	getAllProjectLogs,
-	getMetaDashboardProjectInfo,
-} from "@services/job";
+import { getAllJobsOfProject, getAllProjectLogs, getMetaDashboardProjectInfo } from "@services/job";
 import { redirectToFrontendPath } from "@utils/router";
-import {backendRequest} from "@utils/backendRequest";
+import { backendRequest } from "@utils/backendRequest";
 import { getSelectedProject } from "@redux/stateUtils/projects";
 import React from "react";
 import Link from "next/link";
@@ -36,12 +32,7 @@ function getBuildStatus(status: JobReportStatus) {
 }
 
 function Build(props: any) {
-	const {
-        jobId,
-        createdAt,
-        reportStatus,
-        reportId
-    } = props;
+	const { jobId, createdAt, reportStatus, reportId } = props;
 
 	return (
 		<Link href={`/app/job/review?jobId=${jobId}&reportId=${reportId}`}>
@@ -51,9 +42,7 @@ function Build(props: any) {
 						<div css={styles.buildsId}>#{jobId}</div>
 						<div css={styles.buildsDate}>{getTime(new Date(createdAt))}</div>
 					</div>
-					<div css={styles.commitContainer}>
-						{/*<div css={styles.commitName}>{branchName ? branchName : "N/A"}</div>*/}
-					</div>
+					<div css={styles.commitContainer}>{/*<div css={styles.commitName}>{branchName ? branchName : "N/A"}</div>*/}</div>
 					<div css={[styles.reviewButton]}>
 						<img src={"/svg/dashboard/whiteFlag.svg"} style={{ width: "0.6rem" }} />
 						<span>{getBuildStatus(reportStatus)}</span>
@@ -64,7 +53,7 @@ function Build(props: any) {
 	);
 }
 
-function Tests({test}) {
+function Tests({ test }) {
 	return (
 		<li>
 			<div css={styles.activityInfoContainer}>
@@ -106,25 +95,26 @@ function RenderBuilds(props) {
 
 function RenderTests(props) {
 	const { tests } = props;
-	return <ul css={styles.activityList}>{tests.map((test) =>{
-		return <Tests test={test} />;
-	})}</ul>;
+	return (
+		<ul css={styles.activityList}>
+			{tests.map((test) => {
+				return <Tests test={test} />;
+			})}
+		</ul>
+	);
 }
 
-function OverviewItem(props: { heading: string, itemStatus: string, desc: string, src: string }) {
-	return (<div css={styles.overviewItem}>
-		<div css={styles.productionHealthItemText}>
-			<div className={'heading'}>{props.heading}</div>
-			<div css={styles.productionHealthItemDesc}>{props.itemStatus}</div>
-			<div css={styles.overviewItemInfo}>{props.desc}</div>
-
+function OverviewItem(props: { heading: string; itemStatus: string; desc: string; src: string }) {
+	return (
+		<div css={styles.overviewItem}>
+			<div css={styles.productionHealthItemText}>
+				<div className={"heading"}>{props.heading}</div>
+				<div css={styles.productionHealthItemDesc}>{props.itemStatus}</div>
+				<div css={styles.overviewItemInfo}>{props.desc}</div>
+			</div>
+			<img src={props.src} css={styles.productionHealthItemImage} style={{ width: "2.5rem" }} />
 		</div>
-		<img
-			src={props.src}
-			css={styles.productionHealthItemImage}
-			style={{ width: '2.5rem' }}
-		/>
-	</div>);
+	);
 }
 
 function ProjectDashboard(props) {
@@ -136,12 +126,17 @@ function ProjectDashboard(props) {
 			<div css={styles.productionContainer}>
 				<div css={styles.productionHeading}>Production Health</div>
 				<div css={styles.overviewContainer}>
-				<OverviewItem heading={"Last run status"} itemStatus={lastStatus.status} desc={lastStatus.info} src={"/svg/dashboard/live.svg"} />
-				<OverviewItem heading={"Last 30 days status"} itemStatus={last30DaysStatus.status} desc={last30DaysStatus.info} src={"/svg/dashboard/live.svg"} />
-				<OverviewItem heading={"Hours Saved"} itemStatus={hoursSaved.status} desc={hoursSaved.info} src={"/svg/dashboard/live.svg"} />
-				<OverviewItem heading={"Average Build time"} itemStatus={buildTime.status} desc={buildTime.info} src={"/svg/dashboard/live.svg"} />
+					<OverviewItem heading={"Last run status"} itemStatus={lastStatus.status} desc={lastStatus.info} src={"/svg/dashboard/live.svg"} />
+					<OverviewItem
+						heading={"Last 30 days status"}
+						itemStatus={last30DaysStatus.status}
+						desc={last30DaysStatus.info}
+						src={"/svg/dashboard/live.svg"}
+					/>
+					<OverviewItem heading={"Hours Saved"} itemStatus={hoursSaved.status} desc={hoursSaved.info} src={"/svg/dashboard/live.svg"} />
+					<OverviewItem heading={"Average Build time"} itemStatus={buildTime.status} desc={buildTime.info} src={"/svg/dashboard/live.svg"} />
 				</div>
-				</div>
+			</div>
 
 			<div css={styles.buildActivityContainer}>
 				<div css={styles.leftSection}>
@@ -161,9 +156,7 @@ function ProjectDashboard(props) {
 						<RenderTests userInfo={userInfo} tests={tests} />
 					</div>
 				</div>
-
 			</div>
-
 		</div>
 	);
 }
@@ -192,20 +185,20 @@ const styles = {
 		justify-content: space-between;
 	`,
 	overviewItem: css`
-		border: 1px solid #C4C4C4;
-    border-bottom: 4px solid #C4C4C4;
+		border: 1px solid #c4c4c4;
+		border-bottom: 4px solid #c4c4c4;
 		border-radius: 0.55rem;
 		display: flex;
 		flex: 1rem;
 		max-width: 25%;
 		padding: 0.75rem 1.2rem;
-		
-		.heading{
+
+		.heading {
 			font-size: 1rem;
-      font-weight: bold;
-		
-      color: #636363B2;
-    }
+			font-weight: bold;
+
+			color: #636363b2;
+		}
 		&:not(:first-child) {
 			margin-left: 2rem;
 		}
@@ -213,7 +206,7 @@ const styles = {
 	productionHealthItemText: css``,
 	overviewItemInfo: css`
 		font-size: 0.9rem;
-    margin-top: .25rem;
+		margin-top: 0.25rem;
 		color: #636363;
 	`,
 	productionHealthItemDesc: css`
@@ -221,7 +214,7 @@ const styles = {
 		font-size: 1.5rem;
 		font-weight: 700;
 		margin-top: 1rem;
-    text-transform: uppercase;
+		text-transform: uppercase;
 	`,
 	productionHealthItemImage: css`
 		margin-left: auto;
@@ -295,7 +288,7 @@ const styles = {
 	activityInfoContainer: css`
 		color: #000000;
 		flex: 1;
-		margin-left: .5rem;
+		margin-left: 0.5rem;
 	`,
 	userName: css`
 		font-size: 0.95rem;
@@ -404,10 +397,7 @@ const handleCliToken = async (cli_token, res, req) => {
 		headers: req.headers,
 	});
 
-	res.setHeader(
-		"Set-Cookie",
-		serialize("cli_token", cli_token, { path: "/", maxAge: 0 }),
-	);
+	res.setHeader("Set-Cookie", serialize("cli_token", cli_token, { path: "/", maxAge: 0 }));
 };
 
 ProjectDashboard.getInitialProps = async (ctx: iPageContext) => {
@@ -419,10 +409,7 @@ ProjectDashboard.getInitialProps = async (ctx: iPageContext) => {
 		}
 
 		const selectedProject = getSelectedProject(store.getState());
-		const testsCount = await fetchTestsCountInProject(
-			selectedProject,
-			ctx.metaInfo.headers,
-		);
+		const testsCount = await fetchTestsCountInProject(selectedProject, ctx.metaInfo.headers);
 
 		// If 0 test count redirect to welcome screen
 		if (testsCount && testsCount.totalTests === 0) {
@@ -430,26 +417,12 @@ ProjectDashboard.getInitialProps = async (ctx: iPageContext) => {
 			return {};
 		}
 
-		const buildsPromise = getAllJobsOfProject(
-			selectedProject,
-			null,
-			ctx.metaInfo.headers,
-		);
-		const testPromise = getAllProjectLogs(
-			selectedProject,
-			ctx.metaInfo.headers,
-		);
+		const buildsPromise = getAllJobsOfProject(selectedProject, null, ctx.metaInfo.headers);
+		const testPromise = getAllProjectLogs(selectedProject, ctx.metaInfo.headers);
 
-		const metaDashboardInfo = await getMetaDashboardProjectInfo(
-			selectedProject,
-			ctx.metaInfo.headers,
-		);
+		const metaDashboardInfo = await getMetaDashboardProjectInfo(selectedProject, ctx.metaInfo.headers);
 
-		const [builds, tests] = await Promise.all([
-			buildsPromise,
-			testPromise,
-		]);
-
+		const [builds, tests] = await Promise.all([buildsPromise, testPromise]);
 
 		return {
 			builds,

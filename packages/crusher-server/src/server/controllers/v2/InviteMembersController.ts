@@ -19,7 +19,9 @@ export class InviteMembersController {
 	@Authorized()
 	@Get("/project/link/:projectId")
 	async getProjectInviteLink(@CurrentUser({ required: true }) user, @Param("projectId") projectId: number) {
-		const { user_id, team_id } = user;
+		const {
+            team_id
+        } = user;
 		const inviteLink = await this.inviteMembersService.getPublicProjectInviteCode(projectId, team_id, null);
 
 		return inviteLink;
@@ -38,7 +40,7 @@ export class InviteMembersController {
 		const code = await this.inviteMembersService.createProjectInviteCode(projectId, team_id, null, emails);
 		const userName = userRecord.first_name + " " + userRecord.last_name;
 
-		if (emails && emails.length) {
+		if (emails?.length) {
 			await EmailManager.sendInvitations(
 				emails,
 				{ code: code, type: INVITE_REFERRAL_TYPES.PROJECT },
@@ -62,7 +64,7 @@ export class InviteMembersController {
 
 		const code = await this.inviteMembersService.createTeamInviteCode(team_id, null, emails);
 
-		if (emails && emails.length) {
+		if (emails?.length) {
 			await EmailManager.sendInvitations(
 				emails,
 				{ code: code, type: INVITE_REFERRAL_TYPES.TEAM },

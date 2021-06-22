@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 
 import { cleanHeaders } from "@utils/backendRequest";
 import { redirectToFrontendPath } from "@utils/router";
@@ -54,28 +54,23 @@ FeatureItem.defaultProps = {
 };
 
 const ProjectBasicSettings = () => {
-    const projectInfo: iProjectInfoResponse = useSelector(getProjectInfo);
+	const projectInfo: iProjectInfoResponse = useSelector(getProjectInfo);
 
-    const [projectName, setProjectName] = useState(projectInfo.name);
+	const [projectName, setProjectName] = useState(projectInfo.name);
 
-    const handleProjectNameChange = (event: any) => {
+	const handleProjectNameChange = (event: any) => {
 		setProjectName(event.target.value);
 	};
 
-    const saveBasicSettings = () => {
+	const saveBasicSettings = () => {
 		_updateProjectInfo({ name: projectName }, projectInfo.id).then(() => {
-			(store as any).dispatch(
-				setCurrentProjectInfo({ ...projectInfo, name: projectName }),
-			);
+			(store as any).dispatch(setCurrentProjectInfo({ ...projectInfo, name: projectName }));
 		});
 	};
 
-    return (
+	return (
 		<SettingsContent contentCSS={settingContentCSS}>
-			<SettingsContentHeader
-				title={"Basic Settings"}
-				desc={"Configure crusher name and enable/disables features for the test"}
-			/>
+			<SettingsContentHeader title={"Basic Settings"} desc={"Configure crusher name and enable/disables features for the test"} />
 			<div css={mainContainerCSS}>
 				<Input
 					label={"Name of the project"}
@@ -168,11 +163,9 @@ ProjectBasicSettings.getInitialProps = async (ctx: any) => {
 
 		const selectedProject = getSelectedProject(store.getState());
 
-		await _getProjectInfo(parseInt(selectedProject), headers).then(
-			(projectInfo) => {
-				store.dispatch(setCurrentProjectInfo(projectInfo));
-			},
-		);
+		await _getProjectInfo(parseInt(selectedProject), headers).then((projectInfo) => {
+			store.dispatch(setCurrentProjectInfo(projectInfo));
+		});
 
 		return {
 			isVideoRecordingOn: true,

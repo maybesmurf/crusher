@@ -1,6 +1,5 @@
 import { Service, Container } from "typedi";
 import DBManager from "../manager/DBManager";
-import { TEAM_CREATED, TEAM_CREATION_FAILED } from "../../constants";
 import { CreateTestRequest } from "../interfaces/services/test/CreateTestRequest";
 import { Test } from "../interfaces/db/Test";
 

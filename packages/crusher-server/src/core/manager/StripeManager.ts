@@ -1,7 +1,5 @@
 import { Service } from "typedi";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_API_KEY);
-const _ = require("lodash");
-import "reflect-metadata";
 
 @Service()
 export default class StripeManager {
@@ -36,7 +34,7 @@ export default class StripeManager {
 			return await stripe.invoices.listUpcomingLineItems({
 				customer: stringCustomerId,
 			});
-		} catch (e) {
+		} catch {
 			return null;
 		}
 	}
@@ -60,7 +58,7 @@ export default class StripeManager {
 			customer: stripe_customer_id,
 			trial_period_days: trialDays,
 			pricesList,
-			items: pricesList.map((price) => {}),
+			items: pricesList.map(() => {}),
 		});
 		const subscriptionData = await stripe.subscriptions.create({
 			customer: stripe_customer_id,
@@ -95,7 +93,7 @@ export default class StripeManager {
 		});
 	}
 
-	expireFreeTrial(stripe_subscription_id, date) {
+	expireFreeTrial(stripe_subscription_id) {
 		return stripe.subscriptions.update(stripe_subscription_id, {
 			cancel_at_period_end: true,
 		});

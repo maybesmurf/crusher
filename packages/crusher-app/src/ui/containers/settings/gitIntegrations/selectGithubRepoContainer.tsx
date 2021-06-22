@@ -82,12 +82,12 @@ const SelectGithubRepoContainer = () => {
 
 	useEffect(() => {
 		if (selectedOrgInstallation && octoKitManager.current) {
-            octoKitManager.current?.getReposForInstallation(selectedOrgInstallation.value).then((info) => {
-                if (info.data?.repositories) {
-                    store.dispatch(saveReposForInstallation(selectedOrgInstallation.value, info.data.repositories));
-                }
-            });
-        }
+			octoKitManager.current?.getReposForInstallation(selectedOrgInstallation.value).then((info) => {
+				if (info.data?.repositories) {
+					store.dispatch(saveReposForInstallation(selectedOrgInstallation.value, info.data.repositories));
+				}
+			});
+		}
 	}, [selectedOrgInstallation]);
 
 	useEffect(() => {

@@ -9,7 +9,6 @@ import * as bodyParser from "body-parser";
 import { useContainer, useExpressServer } from "routing-controllers";
 import * as http from "http";
 import { Container } from "typedi";
-import "reflect-metadata";
 import { CorsMiddleware } from "./server/middleware/CorsMiddleware";
 import { ReqLogger } from "./server/middleware/ResponseTime";
 import * as express from "express";

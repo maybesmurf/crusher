@@ -1,4 +1,4 @@
-import { Container, Inject, Service } from "typedi";
+import {Inject, Service} from "typedi";
 import TeamService from "./TeamService";
 import StripeManager from "../manager/StripeManager";
 import DBManager from "../manager/DBManager";
@@ -84,15 +84,15 @@ export default class PaymentService {
 
 			const { is_addon: newPlanIsAddon, listing_type: newPlanListingTpye, product_type: newPlanProductType } = newPlanInfo;
 
-			const filteredPlan = currentPlans.filter((it) => {
+			const [filteredPlan] = currentPlans.filter((it) => {
 				return it.is_addon === newPlanIsAddon && it.listing_type === newPlanListingTpye && it.product_type === newPlanProductType;
-			})[0];
+			});
 
 			await this.removePlan(filteredPlan.stripe_subscription_item_id);
 			await this.addPlan(team_id, subscriptionId, newPlanId);
 
 			return { status: "success" };
-		} catch (e) {
+		} catch {
 			throw new Error("Some error occured");
 		}
 	}
@@ -132,7 +132,7 @@ export default class PaymentService {
 			const changeStripePayment = this.stripeManager.expireFreeTrial(stripe_subscription_id, 0);
 			await Promise.all([updateUserTypePromise, updateLogsPromise, addFreePricingLog, changeStripePayment]);
 			return { success: true };
-		} catch (e) {
+		} catch {
 			return { success: false };
 		}
 	}

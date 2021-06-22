@@ -1,4 +1,4 @@
-import { Authorized, Body, ContentType, Controller, CurrentUser, Get, Param, Post, Req, Res, UnauthorizedError } from "routing-controllers";
+import {Authorized, Body, ContentType, Controller, CurrentUser, Get, Param, Post, UnauthorizedError} from "routing-controllers";
 import { Container, Inject, Service } from "typedi";
 import DBManager from "../../core/manager/DBManager";
 import UserService from "../../core/services/UserService";
@@ -57,8 +57,8 @@ export class TestController {
 	}
 
 	@Post("/goToEditor")
-	@ContentType("text/html")
-	async goToEditor(@Body() body, @Res() res) {
+    @ContentType("text/html")
+    async goToEditor(@Body() body) {
 		const { events, totalTime } = body;
 
 		return `<html><body><script> function sendPostDataWithForm(url, options = {}){ const form = document.createElement('form'); form.method = "post"; form.action = url; const optionKeys = Object.keys(options); for(let optionKey of optionKeys){const hiddenField = document.createElement('input'); hiddenField.type = 'hidden'; hiddenField.name = optionKey; hiddenField.value = options[optionKey]; form.appendChild(hiddenField);} document.body.appendChild(form);
@@ -92,8 +92,8 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 	}
 
 	@Authorized()
-	@Get("/run/:testId")
-	async runTestControllerMethod(@Param("testId") testId: any, @CurrentUser({ required: true }) user: any, @Req() req) {
+    @Get("/run/:testId")
+    async runTestControllerMethod(@Param("testId") testId: any, @CurrentUser({ required: true }) user: any) {
 		const { user_id } = user;
 		const canAccessTest = await this.userService.canAccessTestWithID(testId, user_id);
 
@@ -104,7 +104,7 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 			const insertedJob: InsertRecordResponse = await this.jobService.createJob({
 				project_id: test.project_id,
 				trigger: JobTrigger.MANUAL,
-				host: host ? host : null,
+				host: host || null,
 				status: JobStatus.QUEUED,
 				meta: JSON.stringify([test]),
 			});
@@ -115,7 +115,7 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 				tests: [test],
 				trigger: TRIGGER.CLI,
 				testType: TestType.SAVED,
-				host: host ? host : null,
+				host: host || null,
 				platform: Platform.CHROME,
 			});
 			return {};
@@ -155,7 +155,12 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 	@Authorized()
 	async createTestFromDraft(@CurrentUser({ required: true }) user, @Param("draftId") draftId: number, @Body() body) {
 		const { user_id } = user;
-		const { testName: _testName, projectId: _projectId, framework: _framework, code: _code, events: _events } = body;
+		const {
+            testName: _testName,
+            framework: _framework,
+            code: _code,
+            events: _events
+        } = body;
 		const { name, project_id, code, events } = await this.draftService.getDraftTest(draftId);
 
 		const res = await this.draftService.getLastDraftInstanceResult(draftId);
@@ -207,15 +212,13 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 	}
 
 	@Post("/updateTest/:testId")
-	@Authorized()
-	async updateTest(@CurrentUser({ required: true }) user, @Param("testId") testId, @Body() body) {
+    @Authorized()
+    async updateTest(@CurrentUser({ required: true }) user, @Param("testId") testId) {
 		const { user_id } = user;
 		const canAccessTest = await this.userService.canAccessTestWithID(testId, user_id);
 		if (canAccessTest) {
-			const { testName, projectId, code, testGroupId } = body;
-			const s = await this.testService.updateTest(testName, projectId, code, testId);
-			return { status: 200 };
-		} else {
+            return { status: 200 };
+        } else {
 			return { status: 304, message: "Not authorized" };
 		}
 	}

@@ -32,11 +32,11 @@ export default class DBManager {
 	}
 
 	queryRunner(query: string, valuesToEscape = null): Promise<any> {
-		const queryToExecute = valuesToEscape && valuesToEscape.length ? this.bindValues(query, valuesToEscape) : query;
+		const queryToExecute = valuesToEscape?.length ? this.bindValues(query, valuesToEscape) : query;
 		const startHrTime = process.hrtime();
 
 		return new Promise((resolve, reject) => {
-			this.connPool.query(queryToExecute, (error, result, fields) => {
+			this.connPool.query(queryToExecute, (error, result) => {
 				const elapsedHrTime = process.hrtime(startHrTime);
 				const elapsedTimeInMs = elapsedHrTime[0] * 1000 + elapsedHrTime[1] / 1e6;
 
@@ -62,7 +62,7 @@ export default class DBManager {
 		try {
 			const queryResults = await this.queryRunner(command, valuesToEscape);
 			return queryResults;
-		} catch (e) {
+		} catch {
 			throw new InternalServerError("Some internal error occurred");
 		}
 	};
@@ -71,7 +71,7 @@ export default class DBManager {
 		try {
 			const queryResults = await this.queryRunner(command, valuesToEscape);
 			return queryResults;
-		} catch (e) {
+		} catch {
 			throw new InternalServerError("Some internal error occurred");
 		}
 	};
@@ -79,7 +79,7 @@ export default class DBManager {
 	fetchSingleRow = async (command, valuesToEscape = null): Promise<any> => {
 		try {
 			const queryResults = await this.queryRunner(command, valuesToEscape);
-			if (queryResults && queryResults.length) {
+			if (queryResults?.length) {
 				return queryResults[0];
 			}
 

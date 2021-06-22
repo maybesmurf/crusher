@@ -17,7 +17,6 @@ import { Response } from "express";
 import { setUserCookie } from "../../../utils/cookies";
 import { extractHostname } from "../../../utils/url";
 import { iUser } from "../../../../../crusher-shared/types/db/iUser";
-import { project } from "gcp-metadata";
 
 const USER_DOMAIN = extractHostname(process.env.FRONTEND_URL);
 
@@ -107,16 +106,16 @@ export class UserV2Service {
 		const referralObject = await this.inviteMembersService.parseInviteReferral(referral);
 
 		await this.updateTeam(userId, referralObject.teamId);
-		const role = referralObject.meta && referralObject.meta.role ? referralObject.meta.role : null;
+		const role = referralObject.meta?.role ? referralObject.meta.role : null;
 
-		await this.userTeamRoleService.create(userId, referralObject.teamId, role ? role : TEAM_ROLE_TYPES.ADMIN);
+		await this.userTeamRoleService.create(userId, referralObject.teamId, role || TEAM_ROLE_TYPES.ADMIN);
 
 		if (referral.type === INVITE_REFERRAL_TYPES.TEAM) {
 			const projects = await this.projectService.getAllProjectsOfTeam(referralObject.teamId);
 			const projectIdList = projects.map((project) => project.id);
-			await this.userProjectRoleService.createForProjects(userId, projectIdList, role ? role : PROJECT_ROLE_TYPES.ADMIN);
+			await this.userProjectRoleService.createForProjects(userId, projectIdList, role || PROJECT_ROLE_TYPES.ADMIN);
 		} else {
-			await this.userProjectRoleService.create(userId, (referralObject as iProjectInviteReferral).projectId, role ? role : PROJECT_ROLE_TYPES.ADMIN);
+			await this.userProjectRoleService.create(userId, (referralObject as iProjectInviteReferral).projectId, role || PROJECT_ROLE_TYPES.ADMIN);
 		}
 		return { teamId: referralObject.teamId };
 	}

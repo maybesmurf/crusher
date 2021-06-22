@@ -44,8 +44,8 @@ window.fetch = async function (...args) {
 		const response = await originalFetch(...args);
 		return response;
 	} catch (error) {
-        throw error;
-    } finally {
+		throw error;
+	} finally {
 		--activeRequests;
 		if (activeRequests === 0) {
 			stop();

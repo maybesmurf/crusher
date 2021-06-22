@@ -20,11 +20,11 @@ export default class MonitoringService {
 		return this.dbManager.fetchSingleRow(`UPDATE monitoring_settings SET ? WHERE project_id = ?`, [settings, projectId]);
 	}
 
-	async addMonitoringForProject(settings: MonitoringSettings, projectId: number) {
+	async addMonitoringForProject(settings: MonitoringSettings) {
 		return this.dbManager.insertData(`INSERT INTO monitoring_settings SET ?`, settings);
 	}
 
-	async getMonitoringListForProject(projectId: number): Promise<Array<iMonitoringListResponse>> {
+	async getMonitoringListForProject(projectId: number): Promise<iMonitoringListResponse[]> {
 		return this.dbManager.fetchData(
 			"SELECT *, monitoring_settings.id as id, project_hosts.host_name target_host_name FROM monitoring_settings, project_hosts WHERE monitoring_settings.project_id = ? AND project_hosts.id = monitoring_settings.target_host",
 			[projectId],
@@ -45,7 +45,7 @@ export default class MonitoringService {
 		);
 	}
 
-	async getQueuedMonitorings(): Promise<Array<iMonitoringSettings>> {
+	async getQueuedMonitorings(): Promise<iMonitoringSettings[]> {
 		return this.dbManager.fetchData(`SELECT * FROM monitoring_settings WHERE UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(last_cron_run) > test_interval`);
 	}
 

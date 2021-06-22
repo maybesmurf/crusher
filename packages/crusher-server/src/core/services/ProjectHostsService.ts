@@ -25,7 +25,7 @@ export default class ProjectHostsService {
 		return this.dbManager.fetchSingleRow(`SELECT id, host_name, url FROM project_hosts WHERE id = ?`, [hostId]);
 	}
 
-	async getAllHosts(projectId: number): Promise<Array<iHostListResponse>> {
+	async getAllHosts(projectId: number): Promise<iHostListResponse[]> {
 		return this.dbManager.fetchData(`SELECT * FROM project_hosts WHERE project_id = ?`, [projectId]);
 	}
 

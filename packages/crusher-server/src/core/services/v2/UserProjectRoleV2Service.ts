@@ -22,7 +22,7 @@ export default class UserProjectRoleV2Service {
 		});
 	}
 
-	async createForProjects(userId: number, projectsList: Array<number>, role: PROJECT_ROLE_TYPES) {
+	async createForProjects(userId: number, projectsList: number[], role: PROJECT_ROLE_TYPES) {
 		for (let i = 0; i < projectsList.length; i++) {
 			await this.create(userId, projectsList[i], role);
 		}

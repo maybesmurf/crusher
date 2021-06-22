@@ -1,8 +1,6 @@
-import { TSentryTracking } from '@crusher-shared/types/common/sentryTracking';
+import { TSentryTracking } from "@crusher-shared/types/common/sentryTracking";
 
-
-class SentryService implements TSentryTracking{
-
+class SentryService implements TSentryTracking {
 	// Lazy initialization
 	intialize(userId: string | null) {
 		if (!userId) console.log("Tracking user with anonymous identity. Make sure to call addUser when user Sign in.");
@@ -16,12 +14,9 @@ class SentryService implements TSentryTracking{
 
 	trackCustomEvent() {}
 
-	addUserInfo() {
-	}
+	addUserInfo() {}
 
-	addGroupInfo(){
-
-	}
+	addGroupInfo() {}
 }
 
 /*

@@ -1,7 +1,5 @@
-import { Service, Container, Inject } from "typedi";
+import {Service, Container} from "typedi";
 import DBManager from "../manager/DBManager";
-import { TEAM_CREATED, TEAM_CREATION_FAILED } from "../../constants";
-import { TestInstanceScreenshotStatus } from "../interfaces/TestInstanceScreenshotStatus";
 import TestInstanceService from "./TestInstanceService";
 import { TestInstance } from "../interfaces/db/TestInstance";
 import { Platform } from "../interfaces/Platform";
@@ -27,7 +25,7 @@ export default class TestInstanceScreenshotsService {
 		});
 	}
 
-	async getAllScreenShotsOfInstance(instanceId): Promise<Array<TestInstanceScreenshot>> {
+	async getAllScreenShotsOfInstance(instanceId): Promise<TestInstanceScreenshot[]> {
 		return this.dbManager.fetchData(`SELECT * FROM test_instance_screenshots WHERE instance_id = ?`, [instanceId]);
 	}
 

@@ -1,5 +1,5 @@
 import { Container, Inject, Service } from "typedi";
-import { Authorized, Body, CurrentUser, Get, JsonController, NotFoundError, OnNull, OnUndefined, Param, Put } from "routing-controllers";
+import {Authorized, Body, CurrentUser, Get, JsonController, OnNull, Param, Put} from "routing-controllers";
 import UserService from "../../../core/services/UserService";
 import ProjectService from "../../../core/services/ProjectService";
 import TestService from "../../../core/services/TestService";

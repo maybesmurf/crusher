@@ -1,3 +1,4 @@
+'use strict';
 const { currentEnvironmentName } = require("./env");
 const LoggerDNA = require("logdna");
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
@@ -84,34 +85,34 @@ module.exports = {
 	},
 };
 
-const log = function () {
-	logger.log([...arguments].join(" "));
-	_log.apply(console, arguments);
+const log = function(...args) {
+	logger.log([...args].join(" "));
+	_log.apply(console, args);
 };
 
-const info = function () {
-	logger.info([...arguments].join(" "));
-	_info.apply(console, arguments);
+const info = function(...args) {
+	logger.info([...args].join(" "));
+	_info.apply(console, args);
 };
 
-const debug = function () {
-	logger.debug([...arguments].join(" "));
-	_debug.apply(console, arguments);
+const debug = function(...args) {
+	logger.debug([...args].join(" "));
+	_debug.apply(console, args);
 };
 
-const trace = function () {
-	logger.debug([...arguments].join(" "));
-	_trace.apply(console, arguments);
+const trace = function(...args) {
+	logger.debug([...args].join(" "));
+	_trace.apply(console, args);
 };
 
-const warn = function () {
-	logger.warn([...arguments].join(" "));
-	_warn.apply(console, arguments);
+const warn = function(...args) {
+	logger.warn([...args].join(" "));
+	_warn.apply(console, args);
 };
 
-const error = function () {
-	logger.error([...arguments].join(" "));
-	_error.apply(console, arguments);
+const error = function(...args) {
+	logger.error([...args].join(" "));
+	_error.apply(console, args);
 };
 
 console.log = log;

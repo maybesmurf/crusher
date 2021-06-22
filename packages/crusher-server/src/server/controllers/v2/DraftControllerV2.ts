@@ -1,4 +1,4 @@
-import { JsonController, Get, Authorized, CurrentUser, Body, Post, Param, Res, BadRequestError } from "routing-controllers";
+import {JsonController, Authorized, CurrentUser, Body, Post, Param, BadRequestError} from "routing-controllers";
 import { Service, Container, Inject } from "typedi";
 import DBManager from "../../../core/manager/DBManager";
 import { iUser } from "../../../../../crusher-shared/types/db/iUser";
@@ -22,13 +22,8 @@ export class DraftControllerV2 {
 	}
 
 	@Authorized()
-	@Post("/getLogs/:draftId")
-	async getStatus(
-		@CurrentUser({ required: true }) user: iUser,
-		@Param("draftId") draftId: number,
-		@Body() body,
-		@Res() res,
-	): Promise<iDraftLogsResponse | unknown> {
+    @Post("/getLogs/:draftId")
+    async getStatus(@CurrentUser({ required: true }) user: iUser, @Param("draftId") draftId: number, @Body() body): Promise<iDraftLogsResponse | unknown> {
 		const { logsAfter } = body;
 		let count = 0;
 		const lastInstance = await this.draftInstanceService.getRecentDraftInstance(draftId);
@@ -51,7 +46,7 @@ export class DraftControllerV2 {
 							});
 							clearInterval(interval);
 						})
-						.catch((err) => {
+						.catch(() => {
 							if (count++ === 5) {
 								resolve({ status: DRAFT_LOGS_STATUS.NO_UPDATE, test: testStatus });
 								clearInterval(interval);

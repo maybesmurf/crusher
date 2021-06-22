@@ -119,7 +119,7 @@ export default class UserService {
 			last_name: lastName,
 			email: email,
 			password: encryptedPassword,
-			team_id: referralTeamId ? referralTeamId : null,
+			team_id: referralTeamId || null,
 			verified: false,
 		});
 		if (insertedUser.insertId) {
@@ -136,9 +136,7 @@ export default class UserService {
 					})
 				).teamId;
 			}
-			const projectId = referralProjectId
-				? referralProjectId
-				: (await this.projectService.createDefaultProject(teamId, `${firstName}'s project`)).insertId;
+			const projectId = referralProjectId || (await this.projectService.createDefaultProject(teamId, `${firstName}'s project`)).insertId;
 			return {
 				status: USER_REGISTERED,
 				userId: insertedUser.insertId,
@@ -161,15 +159,13 @@ export default class UserService {
 				verified: true,
 				password: encryptPassword(password),
 			});
-			const teamId = referralTeamId
-				? referralTeamId
-				: (
+			const teamId = referralTeamId || (
 						await this.teamService.createTeam({
 							teamName: "Default",
 							userId: inserted_user.insertId,
 						})
 				  ).teamId;
-			const projectId = referralProjectId ? referralProjectId : (await this.projectService.createDefaultProject(teamId)).insertId;
+			const projectId = referralProjectId || (await this.projectService.createDefaultProject(teamId)).insertId;
 
 			const user_id = inserted_user.insertId;
 

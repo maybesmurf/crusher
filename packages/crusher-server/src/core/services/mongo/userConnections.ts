@@ -28,14 +28,14 @@ export class UserConnectionsMongoService {
 		);
 	}
 
-	getListOfUserConnections(userId: number): Promise<Array<iUserConnection>> {
+	getListOfUserConnections(userId: number): Promise<iUserConnection[]> {
 		return new Promise((resolve, reject) => {
 			UserConnections.find({ userId }, (err, connections) => {
 				if (err) {
 					return reject(err);
 				}
 
-				const userConnections: Array<iUserConnection> = connections.map((connection: any) => connection.toObject({ getters: true }) as iUserConnection);
+				const userConnections: iUserConnection[] = connections.map((connection: any) => connection.toObject({ getters: true }) as iUserConnection);
 
 				resolve(userConnections);
 			});

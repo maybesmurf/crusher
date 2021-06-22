@@ -50,7 +50,7 @@ function MonitoringCard(props: iMonitoringCardProps) {
 	};
 
 	return (
-        <div css={containerCSS}>
+		<div css={containerCSS}>
 			<div css={headerCSS}>
 				<strong css={monitoringNameCSS}>{title}</strong>
 				<span css={monitoringEditButtonCSS}>Edit</span>
@@ -74,7 +74,7 @@ function MonitoringCard(props: iMonitoringCardProps) {
 				</div>
 			</div>
 		</div>
-    );
+	);
 }
 
 const headerCSS = css`

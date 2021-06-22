@@ -1,20 +1,17 @@
-import { emailType } from "../../constants";
-import { iInviteReferral } from "../../../../crusher-shared/types/inviteReferral";
-
 export class EmailManager {
-	public static sendEmailToUsers(users, subject, html) {
+	public static sendEmailToUsers() {
 		console.info("Email Manager is disabled");
 	}
 
-	public static sendEmail(to, from: emailType, subject, html) {
+	public static sendEmail() {
 		console.info("Email Manager is disabled");
 	}
 
-	public static sendVerificationMail(to, code) {
+	public static sendVerificationMail() {
 		console.info("Email Manager is disabled");
 	}
 
-	public static sendInvitations(members: Array<string>, inviteReferral: iInviteReferral, metaInfo: { orgName: string; adminName: string }) {
+	public static sendInvitations() {
 		console.info("Email Manager is disabled");
 	}
 }

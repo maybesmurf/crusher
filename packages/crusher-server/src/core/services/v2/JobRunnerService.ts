@@ -33,7 +33,7 @@ export default class JobRunnerService {
 	async addJobToQueue(
 		projectId: number,
 		userId: number,
-		tests: Array<iTest>,
+		tests: iTest[],
 		platform: PLATFORM,
 		trigger: JOB_TRIGGER = JOB_TRIGGER.MANUAL,
 		hostUrl: string | null = null,

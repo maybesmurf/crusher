@@ -65,7 +65,7 @@ function SignupScreen(props: iSignupScreenProps) {
 
 			switch (status) {
 				case USER_REGISTERED:
-                    return redirectToFrontendPath("/app/dashboard");
+					return redirectToFrontendPath("/app/dashboard");
 				case USER_ALREADY_REGISTERED:
 					alert("An account with this email has already been registered");
 					break;
@@ -140,7 +140,7 @@ function SignupScreen(props: iSignupScreenProps) {
 					<a href={getRegisterGoogleUrl(inviteReferral)} target={isIFrame ? "_blank" : "_self"} className={"noDecoration"}>
 						<div css={googleLoginButtonCSS(theme)}>
 							<GoogleIcon width={"1.5rem"} height={"1.44rem"} />
-							<span style={{marginLeft: 15}}>Signup with Google</span>
+							<span style={{ marginLeft: 15 }}>Signup with Google</span>
 						</div>
 					</a>
 				</div>
@@ -245,44 +245,45 @@ const requestButtonCSS = css`
 
 const googleLoginButtonCSS = (theme: string) => {
 	return css`
-    display: flex;
-    align-item: center;
-    justify-content: center;
+		display: flex;
+		align-item: center;
+		justify-content: center;
 
-    box-sizing: border-box;
-    border-radius: 5px;
-    width: 100%;
-    padding: 1rem 1.75rem;
-    margin-bottom: 1rem;
+		box-sizing: border-box;
+		border-radius: 5px;
+		width: 100%;
+		padding: 1rem 1.75rem;
+		margin-bottom: 1rem;
 
-    font-size: 1rem;
-    line-height: 1.375rem;
-    font-weight: 500;
+		font-size: 1rem;
+		line-height: 1.375rem;
+		font-weight: 500;
 
-    cursor: pointer;
+		cursor: pointer;
 
-    ${theme === "light" &&
-    `
+		${theme === "light" &&
+		`
      background: ${COLORS.dark1};
      color: ${COLORS.white};
     `}
 
-    ${theme === "dark" && `
+		${theme === "dark" &&
+		`
  background: ${COLORS.darkgrey};
  border: 1px solid ${COLORS.lightgrey};
  color: ${COLORS.white};
 `}
         
         &:hover {
-            cursor: pointer;
-            span {
-                text-decoration: none;
-            }
+			cursor: pointer;
+			span {
+				text-decoration: none;
+			}
 
-            color: #fff !important;
-            background: #23272f;
-        }
-    `;
+			color: #fff !important;
+			background: #23272f;
+		}
+	`;
 };
 
 const loginButtonCSS = (theme: string) => {

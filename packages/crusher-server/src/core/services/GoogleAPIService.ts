@@ -1,6 +1,5 @@
-import { Service, Container } from "typedi";
+import {Service} from "typedi";
 import { fetch } from "../utils/fetch";
-import { BadRequestError } from "routing-controllers";
 
 @Service()
 export default class GoogleAPIService {

@@ -12,7 +12,7 @@ export const decodeToken = (token) => {
 	try {
 		const decoded = jwt.verify(token, SECRET);
 		return decoded;
-	} catch (error) {
+	} catch {
 		return false;
 	}
 };
@@ -22,14 +22,14 @@ export function encryptPassword(password: string) {
 }
 
 export function generateSecurePassword() {
-	let length = 8,
-		charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-		retVal = "";
+    let length = 8;
+    let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let retVal = "";
 
-	for (let i = 0, n = charset.length; i < length; ++i) {
+    for (let i = 0, n = charset.length; i < length; ++i) {
 		retVal += charset.charAt(Math.floor(Math.random() * n));
 	}
-	return retVal;
+    return retVal;
 }
 
 export function clearAuthCookies(res) {
