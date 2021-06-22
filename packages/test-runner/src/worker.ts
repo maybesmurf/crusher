@@ -1,12 +1,11 @@
 import { Job, Queue } from "bullmq";
-import { iJobRunRequest } from "../../crusher-shared/types/runner/jobRunRequest";
+import { iJobRunRequest } from "@shared/types/runner/jobRunRequest";
 import { createTmpAssetsDirectoriesIfNotThere, deleteTmpAssetsDirectoriesIfThere, uploadOutputToS3 } from "./util/helper";
 import { TestLogsService } from "./services/logs";
 import { CodeRunnerService } from "./services/runner";
-import { iTestRunnerJobOutput } from "../../crusher-shared/types/runner/jobRunRequestOutput";
-import { ACTIONS_IN_TEST } from "../../crusher-shared/constants/recordedActions";
-import { REDDIS } from "../config/database";
-import { MongoManager } from "./manager/mongo";
+import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
+import { REDDIS } from "@config/database";
+import { MongoManager } from "@manager/mongo";
 
 const videoProcessingQueue = new Queue("video-processing-queue", {
 	connection: REDDIS as any,
@@ -28,7 +27,7 @@ const testCompletedQueue = new Queue("test-completed-queue", {
 	connection: REDDIS,
 });
 
-module.exports = async (bullJob: iTestRunnerJob): Promise<boolean> => {
+export default async (bullJob: iTestRunnerJob): Promise<boolean> => {
 	let testError, testOutput;
 	createTmpAssetsDirectoriesIfNotThere(bullJob.data);
 	const { requestType, instanceId } = bullJob.data;

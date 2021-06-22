@@ -40,8 +40,10 @@ import { LoginConnectionsController } from "./server/controllers/v2/LoginConnect
 import { GitIntegrationsController } from "./server/controllers/integrations/Github";
 import { EmailManager } from "@manager/EmailManager";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
+import MongoManager from "@manager/MongoManager";
 
 const chalk = require("chalk");
+Container.get(MongoManager);
 
 useContainer(Container);
 const expressApp = express();
@@ -50,6 +52,20 @@ expressApp.use(bodyParser({ limit: "50mb" }));
 expressApp.use(bodyParser.urlencoded({ extended: false }));
 
 EmailManager.sendVerificationMail("test@gmail.com", "");
+
+if (process.env.STORAGE_MODE === "local") {
+	const serveStatic = require("serve-static");
+	const finalhandler = require("finalhandler");
+	const serve = serveStatic(process.env.BASE_STORAGE_FOLDER);
+
+	const storagePort = parseInt(process.env.STORAGE_PORT, 10);
+	const server = http.createServer(function (req: any, res: any) {
+		const done = finalhandler(req, res);
+		serve(req, res, done);
+	});
+
+	server.listen(storagePort);
+}
 
 const controllersArr: any = [
 	UserController,

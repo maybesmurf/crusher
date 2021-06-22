@@ -117,12 +117,14 @@ async function createWindow () {
 		}
 	});
 }
+
 app.whenReady().then(() => {
-	createWindow()
+	createWindow();
 	app.on('activate', function () {
 		if (BrowserWindow.getAllWindows().length === 0) createWindow()
-	})
-})
+	});
+});
+
 app.on('window-all-closed', async function () {
 	const cookies = await session.defaultSession.cookies.get({domain: APP_DOMAIN});
 	await session.defaultSession.clearStorageData({
@@ -152,4 +154,4 @@ app.on('window-all-closed', async function () {
 	}
 
 	if (process.platform !== 'darwin') app.quit()
-})
+});

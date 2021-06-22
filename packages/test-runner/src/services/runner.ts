@@ -1,7 +1,8 @@
-import { iJobRunRequest } from "../../../crusher-shared/types/runner/jobRunRequest";
-import { CodeGenerator } from "../../../code-generator/src/generator";
-import { PLATFORM } from "../../../crusher-shared/types/platform";
-import { getAllCapturedVideos, getBaseUrlFromEvents, replaceBaseUrlInEvents, replaceImportWithRequire } from "../util/helper";
+import { iJobRunRequest } from "@shared/types/runner/jobRunRequest";
+import { CodeGenerator } from "@generator/src/generator";
+import { PLATFORM } from "@shared/types/platform";
+import { getAllCapturedVideos, getBaseUrlFromEvents, getEdition, replaceBaseUrlInEvents, replaceImportWithRequire } from "@util/helper";
+import { EDITION_TYPE } from "@shared/types/common/general";
 
 const BROWSER_NAME = {
 	[PLATFORM.CHROME]: "chromium",
@@ -12,7 +13,8 @@ const BROWSER_NAME = {
 export class CodeRunnerService {
 	static getCode(jobRequest: iJobRunRequest) {
 		const generator = new CodeGenerator({
-			shouldRecordVideo: jobRequest.platform === PLATFORM.CHROME,
+			shouldRecordVideo: getEdition() === EDITION_TYPE.EE && jobRequest.platform === PLATFORM.CHROME,
+			usePlaywrightChromium: getEdition() === EDITION_TYPE.OPEN_SOURCE,
 			isHeadless: false,
 			isLiveLogsOn: true,
 			browser: BROWSER_NAME[jobRequest.platform],
@@ -41,6 +43,7 @@ export class CodeRunnerService {
 				"__dirname",
 				"logStep",
 				"handleImageBuffer",
+				"GLOBAL_NODE_MODULES_PATH",
 				`return new Promise(async function (resolve, reject) {
 				    try{
 				        ${code};
@@ -49,7 +52,18 @@ export class CodeRunnerService {
 				      reject(err);
 				    }
 				});`,
-			)(exports, require, module, __filename, __dirname, logStepsHandler, handleScreenshotImagesBuffer);
+			)(
+				exports,
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				//@ts-ignore
+				typeof __webpack_require__ === "function" ? __non_webpack_require__ : require,
+				module,
+				__filename,
+				__dirname,
+				logStepsHandler,
+				handleScreenshotImagesBuffer,
+				process.env.GLOBAL_NODE_MODULES_PATH,
+			);
 		} catch (err) {
 			error = err;
 		}
