@@ -1,5 +1,5 @@
 spec:
- name: sample-golang
+ name: crusher
  services:
  - name: web
    image:
