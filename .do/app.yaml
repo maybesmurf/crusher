@@ -1,9 +1,0 @@
-name: sample-golang-multi
-
-services:
- - name: web
-   image:
-     registry_type: DOCKER_HUB
-     registry: 7296823551
-     repository: test
-     tag: latest
