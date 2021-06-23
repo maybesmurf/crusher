@@ -13,7 +13,3 @@ spec:
       routes:
         - path: /
       source_dir: /
-      github:
-        repo: phuctm97/img-nodejs
-        branch: master
-        deploy_on_push: true
