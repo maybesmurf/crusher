@@ -1,16 +1,10 @@
 spec:
   name: crusher
   services:
-    - name: crusher-app
-      http_port: 3000
-      image:
-        registry: "7296823551"
-        registry_type: DOCKER_HUB
-        repository: test
-        tag: latest
-      instance_count: 1
-      instance_size_slug: basic-s
-      name: crusher-app
-      routes:
-        - path: /
-      source_dir: /
+  - name: web
+    image:
+      registry: "7296823551"
+      registry_type: DOCKER_HUB
+      repository: test
+      tag: latest    
+    http_port: 3000
