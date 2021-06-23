@@ -7,3 +7,13 @@ spec:
         registry_type: DOCKER_HUB
         repository: test
         tag: latest
+      instance_count: 1
+      instance_size_slug: basic-s
+      name: crusher-app
+      routes:
+        - path: /
+      source_dir: /
+      github:
+        repo: phuctm97/img-nodejs
+        branch: master
+        deploy_on_push: true
