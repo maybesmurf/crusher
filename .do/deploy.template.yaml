@@ -1,7 +1,8 @@
 spec:
   name: crusher
   services:
-    - http_port: 3000
+    - name: crusher-app
+      http_port: 3000
       image:
         registry: "7296823551"
         registry_type: DOCKER_HUB
