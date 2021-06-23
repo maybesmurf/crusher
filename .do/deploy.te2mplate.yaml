@@ -1,9 +1,0 @@
-spec: 
-  name: crusher
-  services: 
-    - 
-      image: 
-        registry_type: DOCR
-        repository: chrome
-        tag: latest
-      name: chrome
