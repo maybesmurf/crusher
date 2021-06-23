@@ -2,11 +2,7 @@ spec:
   name: crusher
   services:
     - http_port: 3000
-      image:
-        registry: bitnami
-        registry_type: DOCKER_HUB
-        repository: mongodb
-        tag: latest
+      dockerfile_path: ../Dockerfile
       instance_count: 1
       instance_size_slug: basic-s
       name: crusher-app
