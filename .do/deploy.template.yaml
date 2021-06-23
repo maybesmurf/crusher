@@ -4,7 +4,7 @@ spec:
     - http_port: 3000
       dockerfile_path: Dockerfile
       github: 
-        repo: https://github.com/crusherdev/crusher
+        repo: crusherdev/crusher
         branch: crusher-auto-hover
       instance_count: 1
       instance_size_slug: basic-s
