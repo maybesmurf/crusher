@@ -3,9 +3,9 @@ spec:
   services:
     - http_port: 3000
       image:
-        registry: 7296823551
+        registry: bitnami
         registry_type: DOCKER_HUB
-        repository: test
+        repository: mongodb
         tag: latest
       instance_count: 1
       instance_size_slug: basic-s
