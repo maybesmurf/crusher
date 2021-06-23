@@ -5,8 +5,11 @@ services:
       context: ../../
       dockerfile: docker/oss/Dockerfile
     network_mode: host
+    ports:
+      - "5000:5000"
     environment:
       - LOGDNA=c7bdd500e3cfbfe457a2ec4168b8cfaa
+      - PORT = 5000
     container_name: "oss"
     stdin_open: true # docker run -i
     tty: true
