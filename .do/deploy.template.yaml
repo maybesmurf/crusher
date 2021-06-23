@@ -1,14 +1,9 @@
 spec:
-  name: crusher
+  name: img-nodejs
   services:
-    - http_port: 3000
+    - name: api
       dockerfile_path: Dockerfile
-      github: 
+      github:
         repo: crusherdev/crusher
         branch: crusher-auto-hover
-      instance_count: 1
-      instance_size_slug: basic-s
-      name: crusher-app
-      routes:
-        - path: /
-      source_dir: /
+        deploy_on_push: true
