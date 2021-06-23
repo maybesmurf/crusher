@@ -4,6 +4,6 @@ spec:
     - name: api
       dockerfile_path: Dockerfile
       github:
-        repo: crusherdev/crusher
-        branch: crusher-auto-hover
+        repo: phuctm97/img-nodejs
+        branch: master
         deploy_on_push: true
