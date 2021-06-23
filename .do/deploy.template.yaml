@@ -1,10 +1,8 @@
 spec:
   name: crusher
   services:
-  - name: web
+  - name: chrome
     image:
-      registry: "7296823551"
-      registry_type: DOCKER_HUB
-      repository: test
-      tag: latest    
-    http_port: 3000
+      registry_type: DOCR
+      repository: chrome
+      tag: latest
