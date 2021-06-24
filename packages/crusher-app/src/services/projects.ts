@@ -107,7 +107,7 @@ export const getMonitoringSettings = async (projectId, headers = null): Promise<
 };
 
 export const _getProjectMembers = (projectId: number, headers?: any): Promise<iMemberInfoResponse[]> => {
-	return backendRequest(`/v2/project/get/members/${projectId}`, {
+	return backendRequest(`/project/get/members/${projectId}`, {
 		method: RequestMethod.GET,
 		headers: headers,
 	});

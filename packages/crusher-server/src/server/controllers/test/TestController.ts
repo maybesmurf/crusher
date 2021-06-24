@@ -1,25 +1,35 @@
-import {Authorized, Body, ContentType, Controller, CurrentUser, Get, Param, Post, UnauthorizedError} from "routing-controllers";
-import { Container, Inject, Service } from "typedi";
-import DBManager from "../../core/manager/DBManager";
-import UserService from "../../core/services/UserService";
-import ProjectService from "../../core/services/ProjectService";
-import TestService from "../../core/services/TestService";
-import DraftService from "../../core/services/DraftService";
-import DraftInstanceService from "../../core/services/DraftInstanceService";
-import JobsService, { TRIGGER } from "../../core/services/JobsService";
-import { getDefaultHostFromCode, getTestHostFromActions } from "../../core/utils/helper";
-import TestInstanceService from "../../core/services/TestInstanceService";
-import { JobTrigger } from "../../core/interfaces/JobTrigger";
-import { JobStatus } from "../../core/interfaces/JobStatus";
-import { addJobToRequestQueue } from "@utils/queue";
-import { InsertRecordResponse } from "../../core/interfaces/services/InsertRecordResponse";
-import { Platform } from "../../core/interfaces/Platform";
-import { resolvePathToFrontendURI } from "../../core/utils/uri";
-import { TestType } from "../../core/interfaces/TestType";
-import { TestFramework } from "../../core/interfaces/TestFramework";
-import { EDITOR_TEST_TYPE } from "../../../../crusher-shared/types/editorTestType";
-import ProjectHostsService from "../../core/services/ProjectHostsService";
-import MonitoringService from "../../core/services/MonitoringService";
+import {
+	Authorized,
+	Body,
+	ContentType,
+	Controller,
+	CurrentUser,
+	Get,
+	Param,
+	Post,
+	UnauthorizedError,
+} from 'routing-controllers';
+import { Container, Inject, Service } from 'typedi';
+import DBManager from "../../../core/manager/DBManager";
+import UserService from "../../../core/services/UserService";
+import ProjectService from '../../../core/services/ProjectService';
+import TestService from '../../../core/services/TestService';
+import DraftService from '../../../core/services/DraftService';
+import DraftInstanceService from '../../../core/services/DraftInstanceService';
+import JobsService, { TRIGGER } from '../../../core/services/JobsService';
+import { getDefaultHostFromCode, getTestHostFromActions } from '@utils/helper';
+import TestInstanceService from '../../../core/services/TestInstanceService';
+import { JobTrigger } from '../../../core/interfaces/JobTrigger';
+import { JobStatus } from '../../../core/interfaces/JobStatus';
+import { addJobToRequestQueue } from '@utils/queue';
+import { InsertRecordResponse } from '../../../core/interfaces/services/InsertRecordResponse';
+import { Platform } from '../../../core/interfaces/Platform';
+import { resolvePathToFrontendURI } from '@utils/uri';
+import { TestType } from '../../../core/interfaces/TestType';
+import { TestFramework } from '../../../core/interfaces/TestFramework';
+import { EDITOR_TEST_TYPE } from '@crusher-shared/types/editorTestType';
+import ProjectHostsService from '../../../core/services/ProjectHostsService';
+import MonitoringService from '../../../core/services/MonitoringService';
 
 const RESPONSE_STATUS = {
 	INSUFFICIENT_INFORMATION: "INSUFFICIENT_INFORMATION",
@@ -57,8 +67,8 @@ export class TestController {
 	}
 
 	@Post("/goToEditor")
-    @ContentType("text/html")
-    async goToEditor(@Body() body) {
+	@ContentType("text/html")
+	async goToEditor(@Body() body) {
 		const { events, totalTime } = body;
 
 		return `<html><body><script> function sendPostDataWithForm(url, options = {}){ const form = document.createElement('form'); form.method = "post"; form.action = url; const optionKeys = Object.keys(options); for(let optionKey of optionKeys){const hiddenField = document.createElement('input'); hiddenField.type = 'hidden'; hiddenField.name = optionKey; hiddenField.value = options[optionKey]; form.appendChild(hiddenField);} document.body.appendChild(form);
@@ -92,8 +102,8 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 	}
 
 	@Authorized()
-    @Get("/run/:testId")
-    async runTestControllerMethod(@Param("testId") testId: any, @CurrentUser({ required: true }) user: any) {
+	@Get("/run/:testId")
+	async runTestControllerMethod(@Param("testId") testId: any, @CurrentUser({ required: true }) user: any) {
 		const { user_id } = user;
 		const canAccessTest = await this.userService.canAccessTestWithID(testId, user_id);
 
@@ -155,12 +165,7 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 	@Authorized()
 	async createTestFromDraft(@CurrentUser({ required: true }) user, @Param("draftId") draftId: number, @Body() body) {
 		const { user_id } = user;
-		const {
-            testName: _testName,
-            framework: _framework,
-            code: _code,
-            events: _events
-        } = body;
+		const { testName: _testName, framework: _framework, code: _code, events: _events } = body;
 		const { name, project_id, code, events } = await this.draftService.getDraftTest(draftId);
 
 		const res = await this.draftService.getLastDraftInstanceResult(draftId);
@@ -212,13 +217,13 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 	}
 
 	@Post("/updateTest/:testId")
-    @Authorized()
-    async updateTest(@CurrentUser({ required: true }) user, @Param("testId") testId) {
+	@Authorized()
+	async updateTest(@CurrentUser({ required: true }) user, @Param("testId") testId) {
 		const { user_id } = user;
 		const canAccessTest = await this.userService.canAccessTestWithID(testId, user_id);
 		if (canAccessTest) {
-            return { status: 200 };
-        } else {
+			return { status: 200 };
+		} else {
 			return { status: 304, message: "Not authorized" };
 		}
 	}
@@ -234,8 +239,7 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 		const tests = await this.testService.getAllTestsInProject(projectId, true);
 
 		for (let i = 0; i < tests.length; i++) {
-			const totalTestsToday = await this.testInstanceService.getAllInstancesOfTestToday(tests[i].id);
-			tests[i]["instancesToday"] = totalTestsToday;
+			tests[i]["instancesToday"] = await this.testInstanceService.getAllInstancesOfTestToday(tests[i].id);
 		}
 
 		return tests;

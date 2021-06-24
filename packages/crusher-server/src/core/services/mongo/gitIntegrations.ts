@@ -18,7 +18,7 @@ export class GitIntegrationsService {
 
 	async getInstallationRepo(repoName: string, projectId: number): Promise<iGithubIntegration | null> {
 		console.log("REPO NAME IS", repoName, projectId);
-		return new Promise(resolve => {
+		return new Promise((resolve) => {
 			GitIntegrations.findOne({ projectId: { $eq: projectId }, repoName: { $eq: repoName } }, (err, doc) => {
 				if (err || !doc) return resolve(null);
 

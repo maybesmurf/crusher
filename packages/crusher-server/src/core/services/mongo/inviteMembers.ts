@@ -61,13 +61,7 @@ export class InviteMembersService {
 		});
 	}
 
-	createProjectInviteCode(
-		projectId: number,
-		teamId: number,
-		expiresOn: Date | null = null,
-		emails: string[] | null = null,
-		meta: any = {},
-	): Promise<string> {
+	createProjectInviteCode(projectId: number, teamId: number, expiresOn: Date | null = null, emails: string[] | null = null, meta: any = {}): Promise<string> {
 		return new Promise((resolve, reject) => {
 			new ProjectInviteReferrals({
 				teamId: teamId,

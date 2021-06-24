@@ -100,9 +100,7 @@ export default class TestsEventsWorker {
 
 					await prepareResultForDraftInstance(runnerJobRequestInfo.instanceId, output.signedImageUrls, !!error);
 				} else {
-					const {
-                        job
-                    } = runnerJobRequestInfo;
+					const { job } = runnerJobRequestInfo;
 
 					if (job) {
 						await jobsService.updateJobStatus(JobStatus.ABORTED, runnerJobRequestInfo.job.id);

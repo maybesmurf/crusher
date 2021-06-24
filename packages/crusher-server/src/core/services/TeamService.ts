@@ -1,6 +1,6 @@
 import { Service, Container } from "typedi";
 import DBManager from "../manager/DBManager";
-import {TEAM_CREATED} from "../../constants";
+import { TEAM_CREATED } from "../../constants";
 import { CreateTeamRequest } from "../interfaces/services/team/CreateTeamRequest";
 import { TierPlan } from "../interfaces/TierPlan";
 import { iUser } from "@crusher-shared/types/db/iUser";
@@ -31,8 +31,8 @@ export default class TeamService {
 				await this.dbManager.fetchSingleRow("UPDATE users SET team_id=? WHERE id=?", [team.insertId, userId]);
 				return { status: TEAM_CREATED, teamId: team.insertId };
 			} else {
-                throw new Error("Team creation failed");
-            }
+				throw new Error("Team creation failed");
+			}
 		}
 		throw new Error("User has already joined some team");
 	}

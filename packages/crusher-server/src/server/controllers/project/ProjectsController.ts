@@ -1,21 +1,23 @@
-import { Authorized, Body, CurrentUser, Get, JsonController, Param, Post, Req, UnauthorizedError } from "routing-controllers";
+import { Authorized, Body, CurrentUser, Get, JsonController, OnNull, Param, Post, Put, Req, UnauthorizedError } from "routing-controllers";
 import { Container, Inject, Service } from "typedi";
-import DBManager from "../../core/manager/DBManager";
-import UserService from "../../core/services/UserService";
-import ProjectService from "../../core/services/ProjectService";
-import JobsService, { TRIGGER } from "../../core/services/JobsService";
+import DBManager from "../../../core/manager/DBManager";
+import UserService from "../../../core/services/UserService";
+import ProjectService from "../../../core/services/ProjectService";
+import JobsService, { TRIGGER } from "../../../core/services/JobsService";
 
-import TestService from "../../core/services/TestService";
-import { decodeToken } from "../../core/utils/auth";
-import GithubService from "../../core/services/GithubService";
+import TestService from "../../../core/services/TestService";
+import { decodeToken } from "../../../core/utils/auth";
+import GithubService from "../../../core/services/GithubService";
 import { addJobToRequestQueue } from "@utils/queue";
 import * as chalk from "chalk";
-import { Logger } from "../../utils/logger";
-import { Platform } from "../../core/interfaces/Platform";
-import { JobTrigger } from "../../core/interfaces/JobTrigger";
-import { TestType } from "../../core/interfaces/TestType";
+import { Logger } from "../../../utils/logger";
+import { Platform } from "../../../core/interfaces/Platform";
+import { JobTrigger } from "../../../core/interfaces/JobTrigger";
+import { TestType } from "../../../core/interfaces/TestType";
 import { iAllProjectsItemResponse } from "@crusher-shared/types/response/allProjectsResponse";
-import { GitIntegrationsService } from "../../core/services/mongo/gitIntegrations";
+import { GitIntegrationsService } from "../../../core/services/mongo/gitIntegrations";
+import { PLATFORM } from "@crusher-shared/types/platform";
+import { JOB_TRIGGER } from "@crusher-shared/types/jobTrigger";
 
 @Service()
 @JsonController("/projects")
@@ -48,9 +50,7 @@ export class ProjectsController {
 
 	@Get("/testsCount/:projectId")
 	async getTestsCountInProject(@CurrentUser({ required: true }) user, @Param("projectId") projectId) {
-		const {
-            user_id
-        } = user;
+		const { user_id } = user;
 
 		const canAccessThisProject = await this.userService.canAccessProjectId(projectId, user_id);
 
@@ -78,18 +78,8 @@ export class ProjectsController {
 	@Post("/runTests/:projectId")
 	async runTestsInProject(@Param("projectId") projectId, @Req() req, @Body() body) {
 		try {
-			const {
-                cliToken,
-                host,
-                branchName,
-                commitId,
-                repoName,
-                commitName,
-                isFromGithub
-            } = body;
-			const {
-                user_id
-            } = decodeToken(cliToken);
+			const { cliToken, host, branchName, commitId, repoName, commitName, isFromGithub } = body;
+			const { user_id } = decodeToken(cliToken);
 
 			const user = await this.userService.getUserInfo(user_id);
 			if (!user) {
@@ -155,5 +145,39 @@ export class ProjectsController {
 				err,
 			});
 		}
+	}
+
+	@Get("/get/:projectId")
+	@OnNull(404)
+	async getProjectInfo(@Param("projectId") projectId: number) {
+		return this.projectService.getProject(projectId);
+	}
+
+	@Authorized()
+	@Get("/get/members/:projectId")
+	@OnNull(404)
+	async getProjectMembers(@CurrentUser({ required: true }) user, @Param("projectId") projectId: number) {
+		return this.projectService.getProjectMembers(projectId);
+	}
+
+	@Put("/update/:projectId")
+	async updateProjectInfo(@Param("projectId") projectId: number, @Body() body: any) {
+		const { info } = body;
+		return {
+			status: "DONE",
+			response: this.projectService.updateProjectName(info.name, projectId),
+		};
+	}
+
+	@Authorized()
+	@Get("/run/:projectId")
+	async runTests(@CurrentUser({ required: true }) user, @Param("projectId") projectId: number) {
+		const { user_id } = user;
+		const projectHosts = await this.projectHostsService.getAllHosts(projectId);
+		if (!projectHosts.length) {
+			throw new Error("No project hosts created to run");
+		}
+		await this.jobRunnerService.runTestsInProject(projectId, PLATFORM.CHROME, JOB_TRIGGER.MANUAL, user_id, projectHosts[0], null);
+		return "Running";
 	}
 }

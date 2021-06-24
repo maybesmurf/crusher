@@ -4,7 +4,7 @@ import { JobInfo } from "@interfaces/JobInfo";
 
 export class JobService {
 	static getJob(jobId: number, headers = null): Promise<JobInfo> {
-		return backendRequest(`/v2/job/get/${jobId}`, {
+		return backendRequest(`/job/get/${jobId}`, {
 			method: RequestMethod.GET,
 			headers: headers,
 		});

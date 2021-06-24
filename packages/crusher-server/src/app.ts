@@ -26,16 +26,12 @@ import { TestInstanceResultSetsController } from "./server/controllers/TestInsta
 import { TestInstanceResultsController } from "./server/controllers/TestInstanceResultsController";
 import { MonitoringController } from "./server/controllers/MonitoringController";
 import { Slack } from "./server/controllers/integrations/Slack";
-import { JobsControllerV2 } from "./server/controllers/v2/JobsControllerV2";
-import { TestInstanceControllerV2 } from "./server/controllers/v2/TestInstanceControllerV2";
 import { PaymentController } from "./server/controllers/PaymentController";
-import { JobReportsController } from "./server/controllers/v2/JobReportsController";
-import { ProjectsControllerV2 } from "./server/controllers/v2/ProjectsControllerV2";
-import { TeamControllerV2 } from "./server/controllers/v2/TeamControllerV2";
-import { InviteMembersController } from "./server/controllers/v2/InviteMembersController";
-import { UserControllerV2 } from "./server/controllers/v2/UserControllerV2";
-import { DraftControllerV2 } from "./server/controllers/v2/DraftControllerV2";
-import { LoginConnectionsController } from "./server/controllers/v2/LoginConnectionsController";
+import { JobReportsController } from "./server/controllers/JobReportsController";
+
+import { InviteMembersController } from "./server/controllers/InviteMembersController";
+
+import { LoginConnectionsController } from "./server/controllers/LoginConnectionsController";
 import { GitIntegrationsController } from "./server/controllers/integrations/Github";
 import { EmailManager } from "@manager/EmailManager";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
@@ -80,16 +76,10 @@ const controllersArr: any = [
 	TestInstanceResultSetsController,
 	TestInstanceResultsController,
 	MonitoringController,
-	JobsControllerV2,
-	TestInstanceControllerV2,
 	Slack,
 	PaymentController,
 	JobReportsController,
-	ProjectsControllerV2,
-	TeamControllerV2,
 	InviteMembersController,
-	UserControllerV2,
-	DraftControllerV2,
 	LoginConnectionsController,
 	GitIntegrationsController,
 ];

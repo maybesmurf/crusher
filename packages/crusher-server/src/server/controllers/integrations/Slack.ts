@@ -1,4 +1,4 @@
-import {Get, JsonController, MethodNotAllowedError} from "routing-controllers";
+import { Get, JsonController, MethodNotAllowedError } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import UserService from "../../../core/services/UserService";
 
@@ -9,8 +9,8 @@ export class Slack {
 	private userService: UserService;
 
 	// Return webhook url to particular channel after
-    @Get("/add_to_slack")
-    async connectGithub() {
+	@Get("/add_to_slack")
+	async connectGithub() {
 		if (!process.env.GITHUB_CLIENT_ID) {
 			throw new MethodNotAllowedError();
 		}

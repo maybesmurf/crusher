@@ -28,15 +28,15 @@ const requestQueue = new Queue("request-queue", {
 });
 
 export async function addTestRequestToQueue(testRequest: RunRequest) {
-    const { test, job, testCount } = testRequest;
-    const testLogsService = new TestLogsService();
-    Logger.debug("Queue::addTestToQueue", chalk.hex("#0b2ce2").bold(`Got a request for test run :`), [test, job]);
+	const { test, job, testCount } = testRequest;
+	const testLogsService = new TestLogsService();
+	Logger.debug("Queue::addTestToQueue", chalk.hex("#0b2ce2").bold(`Got a request for test run :`), [test, job]);
 
-    let instanceId = 0;
+	let instanceId = 0;
 
-    console.log("INSIDE THE TEST ADD QUEUE", true);
+	console.log("INSIDE THE TEST ADD QUEUE", true);
 
-    if (test.testType !== TestType.DRAFT && job) {
+	if (test.testType !== TestType.DRAFT && job) {
 		const instance = await testInstanceService.createNewTestInstance({
 			jobId: job.id,
 			testId: test.id,
@@ -57,10 +57,10 @@ export async function addTestRequestToQueue(testRequest: RunRequest) {
 		instanceId = instance.insertId;
 	}
 
-    testLogsService.init(test.id, instanceId, test.testType, job ? job.id : -1);
-    await testLogsService.notifyTestAddedToQueue();
+	testLogsService.init(test.id, instanceId, test.testType, job ? job.id : -1);
+	await testLogsService.notifyTestAddedToQueue();
 
-    await requestQueue.add(
+	await requestQueue.add(
 		test.id.toString(),
 		{
 			job,
@@ -81,7 +81,7 @@ export async function addJobToRequestQueue(jobRequest) {
 	const referenceJob = await jobsService.getReferenceJob(job);
 	const jobReportsId = await jobReportsService.createJobReport(jobId, referenceJob ? referenceJob.id : jobId, projectId);
 
-	const totalTestCount = tests.reduce(prev => {
+	const totalTestCount = tests.reduce((prev) => {
 		const count = platform === PLATFORM.ALL ? 3 : 1;
 		return prev + count;
 	}, 0);

@@ -59,9 +59,7 @@ export class AlertingController {
 
 	@Post("/hooks/reciever")
 	async hookReciever(@Body() body) {
-		const {
-            action
-        } = body;
+		const { action } = body;
 		Logger.info("AlertingController::hookReceiver", `Received webhook from github: (${action})`);
 
 		return body;
@@ -70,9 +68,7 @@ export class AlertingController {
 	@Get("/add/slack")
 	async addSlackCallback(@CurrentUser({ required: true }) user, @QueryParams() params, @Res() res) {
 		try {
-			const {
-                user_id
-            } = user;
+			const { user_id } = user;
 			const { code, state: project_id } = params;
 			const integrationConfig = await this.alertingService.getSlackAccessConfig(code);
 			if (!integrationConfig || !integrationConfig.ok) {
@@ -88,6 +84,6 @@ export class AlertingController {
 
 	@Get("/getSlackIntegrations/:project_id")
 	async getSlackIntegrationForProject(@CurrentUser({ required: true }) user, @Param("project_id") project_id: number) {
-        return this.alertingService.getSlackIntegrationsInProject(project_id);
-    }
+		return this.alertingService.getSlackIntegrationsInProject(project_id);
+	}
 }

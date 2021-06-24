@@ -1,14 +1,14 @@
-import {JsonController, Authorized, CurrentUser, Get, Param} from "routing-controllers";
+import { JsonController, Authorized, CurrentUser, Get, Param } from "routing-controllers";
 import { Service, Container, Inject } from "typedi";
-import DBManager from "../../core/manager/DBManager";
-import UserService from "../../core/services/UserService";
-import ProjectHostsService from "../../core/services/ProjectHostsService";
-import ProjectService from "../../core/services/ProjectService";
-import CommentsService from "../../core/services/CommentsService";
-import TestInstanceResultsService from "../../core/services/TestInstanceResultsService";
-import TestInstanceService from "../../core/services/TestInstanceService";
-import JobsService from "../../core/services/JobsService";
-import TestInstanceResultSetsService from "../../core/services/TestInstanceResultSetsService";
+import DBManager from "../../../core/manager/DBManager";
+import UserService from "../../../core/services/UserService";
+import ProjectHostsService from "../../../core/services/ProjectHostsService";
+import ProjectService from "../../../core/services/ProjectService";
+import CommentsService from "../../../core/services/CommentsService";
+import TestInstanceResultsService from "../../../core/services/TestInstanceResultsService";
+import TestInstanceService from "../../../core/services/TestInstanceService";
+import JobsService from "../../../core/services/JobsService";
+import TestInstanceResultSetsService from "../../../core/services/TestInstanceResultSetsService";
 
 @Service()
 @JsonController("/testInstanceResultSet")
@@ -40,15 +40,15 @@ export class TestInstanceResultSetsController {
 	@Authorized()
 	@Get("/approveAll/:jobId")
 	async approveAll(@CurrentUser({ required: true }) user, @Param("jobId") jobId) {
-        const { user_id } = user;
-        const testInstances = await this.testInstanceService.getAllInstancesWithResultByJobIdWithoutPlatfom(jobId);
+		const { user_id } = user;
+		const testInstances = await this.testInstanceService.getAllInstancesWithResultByJobIdWithoutPlatfom(jobId);
 
-        await Promise.all(
+		await Promise.all(
 			Object.keys(testInstances).map((resultSetId) => {
 				return this.testInstanceResultsService.markResultAsApproved(parseInt(resultSetId), user_id).then(() => {
 					return this.testInstanceResultSetService.updateResultSetStatus(parseInt(resultSetId), null);
 				});
 			}),
 		);
-    }
+	}
 }

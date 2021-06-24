@@ -1,10 +1,9 @@
-import { resoveWorkerPath } from './utils/env';
+import { resoveWorkerPath } from "./utils/env";
 
 require("dotenv").config();
 
 import { Queue, QueueScheduler, Worker } from "bullmq";
 import { REDDIS } from "../config/database";
-
 
 function initializeQueues() {
 	console.debug("Initializing queues");

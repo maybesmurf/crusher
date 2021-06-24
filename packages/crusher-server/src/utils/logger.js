@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 const { currentEnvironmentName } = require("./env");
 const LoggerDNA = require("logdna");
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
@@ -85,32 +85,32 @@ module.exports = {
 	},
 };
 
-const log = function(...args) {
+const log = function (...args) {
 	logger.log([...args].join(" "));
 	_log.apply(console, args);
 };
 
-const info = function(...args) {
+const info = function (...args) {
 	logger.info([...args].join(" "));
 	_info.apply(console, args);
 };
 
-const debug = function(...args) {
+const debug = function (...args) {
 	logger.debug([...args].join(" "));
 	_debug.apply(console, args);
 };
 
-const trace = function(...args) {
+const trace = function (...args) {
 	logger.debug([...args].join(" "));
 	_trace.apply(console, args);
 };
 
-const warn = function(...args) {
+const warn = function (...args) {
 	logger.warn([...args].join(" "));
 	_warn.apply(console, args);
 };
 
-const error = function(...args) {
+const error = function (...args) {
 	logger.error([...args].join(" "));
 	_error.apply(console, args);
 };

@@ -95,21 +95,21 @@ export default class ProjectService {
 	}
 
 	async getAllProjectsOfUser(): Promise<iAllProjectsItemResponse[]> {
-        const out = [];
-        {
-            const noTests = await this.dbManager.fetchSingleRow("SELECT COUNT(*) as totalTestCount FROM tests WHERE tests.project_id = ?", [project.id]);
+		const out = [];
+		{
+			const noTests = await this.dbManager.fetchSingleRow("SELECT COUNT(*) as totalTestCount FROM tests WHERE tests.project_id = ?", [project.id]);
 
-            // @TODO: DO this in a single query.
-            out.push({
+			// @TODO: DO this in a single query.
+			out.push({
 				id: project.id,
 				name: project.name,
 				team_id: project.team_id,
 				noTests: noTests.totalTestCount,
 				created_at: project.created_at,
 			});
-        };
-        return out;
-    }
+		}
+		return out;
+	}
 
 	async deleteProject(projectId: number) {
 		return this.dbManager.fetchSingleRow("DELETE FROM projects WHERE id = ?", [projectId]);

@@ -1,11 +1,11 @@
 import { Container, Inject, Service } from "typedi";
 import { Authorized, CurrentUser, Get, JsonController } from "routing-controllers";
-import DBManager from "../../../core/manager/DBManager";
-import TeamService from "../../../core/services/TeamService";
+import DBManager from "../../core/manager/DBManager";
+import TeamService from "../../core/services/TeamService";
 
 @Service()
 @JsonController("/v2/team")
-export class TeamControllerV2 {
+export class TeamController {
 	@Inject()
 	private teamService: TeamService;
 

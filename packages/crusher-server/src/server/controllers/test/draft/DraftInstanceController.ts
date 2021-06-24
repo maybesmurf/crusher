@@ -1,4 +1,4 @@
-import {JsonController, Get, Authorized, Body, Post, Param} from "routing-controllers";
+import { JsonController, Get, Authorized, Body, Post, Param } from "routing-controllers";
 import { Service, Container, Inject } from "typedi";
 import DBManager from "../../core/manager/DBManager";
 import UserService from "../../core/services/UserService";
@@ -24,22 +24,22 @@ export class TestInstanceController {
 	}
 
 	@Authorized()
-    @Post("/create")
-    async createDraftInstance() {
-        return {};
-    }
+	@Post("/create")
+	async createDraftInstance() {
+		return {};
+	}
 
 	@Authorized()
-    @Get("/getAll/:draftTestId")
-    async getAllDraftInstances(@Param("draftTestId") draftTestId: number) {
-        return this.draftInstanceService.getAllDraftInstances(draftTestId);
-    }
+	@Get("/getAll/:draftTestId")
+	async getAllDraftInstances(@Param("draftTestId") draftTestId: number) {
+		return this.draftInstanceService.getAllDraftInstances(draftTestId);
+	}
 
 	@Authorized()
-    @Post("/updateDraftInstance/:id")
-    async updateDraftInstance(@Param("id") draftInstanceId: number, @Body() body) {
-        const { status } = body;
+	@Post("/updateDraftInstance/:id")
+	async updateDraftInstance(@Param("id") draftInstanceId: number, @Body() body) {
+		const { status } = body;
 
-        return this.draftInstanceService.updateDraftInstanceStatus(status, draftInstanceId);
-    }
+		return this.draftInstanceService.updateDraftInstanceStatus(status, draftInstanceId);
+	}
 }

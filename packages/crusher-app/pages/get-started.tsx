@@ -1,29 +1,29 @@
-import React from "react";
-import Head from "next/head";
 import { useContext, useState } from "react";
-import { resolvePathToBackendURI } from "@utils/url";
-import withoutSession from "@hoc/withoutSession";
-import { USER_ALREADY_REGISTERED, USER_REGISTERED } from "@utils/constants";
-import { _registerUser } from "@services/user";
-import { redirectToFrontendPath } from "@utils/router";
-import { AuthenticationTemplate } from "@ui/template/authenticationDark";
-import { css } from "@emotion/core";
-import { BackSVG, GoogleIcon } from "@ui/components/common/SVGs";
-import Link from "next/link";
+import React from "react";
 import { COLORS, ThemeContext } from "@constants/style";
 import { iInviteReferral } from "@crusher-shared/types/inviteReferral";
+import { css } from "@emotion/core";
+import withoutSession from "@hoc/withoutSession";
+import { iPageContext } from "@interfaces/pageContext";
+import { _registerUser } from "@services/user";
+import { BackSVG, GoogleIcon } from "@ui/components/common/SVGs";
+import { AuthenticationTemplate } from "@ui/template/authenticationDark";
+import { USER_ALREADY_REGISTERED, USER_REGISTERED } from "@utils/constants";
+import { redirectToFrontendPath } from "@utils/router";
+import { resolvePathToBackendURI } from "@utils/url";
+import Head from "next/head";
 
+import Link from "next/link";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
 import isEmail from "validator/lib/isEmail";
-import { iPageContext } from "@interfaces/pageContext";
 
 interface iSignupScreenProps {
 	inviteReferral: iInviteReferral | null;
 }
 
 function getRegisterGoogleUrl(inviteReferral: iInviteReferral | null) {
-	const url = new URL(resolvePathToBackendURI("/v2/user/authenticate/google"));
+	const url = new URL(resolvePathToBackendURI("/user/authenticate/google"));
 
 	if (inviteReferral) {
 		url.searchParams.append("inviteType", inviteReferral.type);

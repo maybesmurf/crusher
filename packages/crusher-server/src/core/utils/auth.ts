@@ -22,14 +22,14 @@ export function encryptPassword(password: string) {
 }
 
 export function generateSecurePassword() {
-    let length = 8;
-    let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let retVal = "";
+	let length = 8;
+	let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	let retVal = "";
 
-    for (let i = 0, n = charset.length; i < length; ++i) {
+	for (let i = 0, n = charset.length; i < length; ++i) {
 		retVal += charset.charAt(Math.floor(Math.random() * n));
 	}
-    return retVal;
+	return retVal;
 }
 
 export function clearAuthCookies(res) {

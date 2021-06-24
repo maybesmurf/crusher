@@ -1,10 +1,11 @@
 import { JsonController, Get, Authorized, CurrentUser, Body, Post, UnauthorizedError, Param } from "routing-controllers";
 import { Service, Container, Inject } from "typedi";
-import DBManager from "../../core/manager/DBManager";
-import UserService from "../../core/services/UserService";
-import ProjectService from "../../core/services/ProjectService";
-import TestInstanceService from "../../core/services/TestInstanceService";
-import JobsService from "../../core/services/JobsService";
+import DBManager from "../../../core/manager/DBManager";
+import UserService from "../../../core/services/UserService";
+import ProjectService from "../../../core/services/ProjectService";
+import TestInstanceService from "../../../core/services/TestInstanceService";
+import JobsService from "../../../core/services/JobsService";
+import { TestLogsService } from "../../../core/services/mongo/testLogs";
 
 @Service()
 @JsonController("/test_instance")
@@ -17,6 +18,8 @@ export class TestInstanceController {
 	private projectService: ProjectService;
 	@Inject()
 	private buildsService: JobsService;
+	@Inject()
+	private testLogsService: TestLogsService;
 
 	private dbManager: DBManager;
 
@@ -49,5 +52,15 @@ export class TestInstanceController {
 		} else {
 			throw new UnauthorizedError("User not authorized to access test instance with this id.");
 		}
+	}
+
+	@Authorized()
+	@Get(`/logs/:instance_id`)
+	async getJob(@CurrentUser({ required: true }) user, @Param(`instance_id`) instanceId: number) {
+		const instanceLogs = (await this.testLogsService.getLogsOfInstanceInJob(instanceId)).map((log) => {
+			return log[`_doc`];
+		});
+
+		return instanceLogs;
 	}
 }

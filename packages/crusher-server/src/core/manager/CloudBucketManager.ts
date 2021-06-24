@@ -27,7 +27,7 @@ export class CloudBucketManager {
 	}
 
 	verifyConnection() {
-		this.s3BucketService.listBuckets(function(err) {
+		this.s3BucketService.listBuckets(function (err) {
 			if (err) {
 				console.log("Couldn't connect to crusher S3", err);
 			} else {

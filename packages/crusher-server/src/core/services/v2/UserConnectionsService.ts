@@ -2,7 +2,7 @@ import { Service, Container } from "typedi";
 import DBManager from "../../manager/DBManager";
 import { createOAuthAppAuth } from "@octokit/auth-oauth-app";
 import { Authentication, TokenAuthentication } from "@octokit/auth-oauth-app/dist-types/types";
-import {Octokit} from "@octokit/rest";
+import { Octokit } from "@octokit/rest";
 import { UserConnectionsMongoService } from "../mongo/userConnections";
 import { iUserConnection } from "@crusher-shared/types/mongo/userConnection";
 

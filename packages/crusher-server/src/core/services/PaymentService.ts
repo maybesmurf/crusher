@@ -1,4 +1,4 @@
-import {Inject, Service} from "typedi";
+import { Inject, Service } from "typedi";
 import TeamService from "./TeamService";
 import StripeManager from "../manager/StripeManager";
 import DBManager from "../manager/DBManager";

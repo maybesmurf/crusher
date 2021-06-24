@@ -26,8 +26,8 @@ async function preChecks() {
 
 export async function init() {
 	if (!(await preChecks())) {
-        throw new Error("Some error occurred while trying to connection with mongodb or mysql");
-    }
+		throw new Error("Some error occurred while trying to connection with mongodb or mysql");
+	}
 
 	Logger.debug("CRON", "Started STOP_STALLED_TESTS_CHECKER cron job every 10 minutes");
 	const stopStalledTestsCronJob = new CronJob(
@@ -38,8 +38,8 @@ export async function init() {
 				const jobsService = Container.get(JobsService);
 				await jobsService.stopAllJobsRunningForMoreThanAnHour();
 			} catch {
-                this.stop();
-            }
+				this.stop();
+			}
 		},
 		null,
 		true,
@@ -60,11 +60,11 @@ export async function init() {
 					await monitoringService.updateLastCronRunForProject(monitoring.id);
 				}
 			} catch (ex) {
-                // Cleanup job if some error occurred during cron
-                Logger.fatal("startTestCron", "Error occurred when starting the tests", ex);
+				// Cleanup job if some error occurred during cron
+				Logger.fatal("startTestCron", "Error occurred when starting the tests", ex);
 
-                this.stop();
-            }
+				this.stop();
+			}
 		},
 		null,
 		true,

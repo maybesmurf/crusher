@@ -165,32 +165,26 @@ async function handlePostChecksOperations(reportId: number, totalTestCount, jobI
 }
 
 async function runChecks(details) {
-    const {
-        error,
-        platform,
-        reportId,
-        testId,
-        instanceId
-    } = details;
+	const { error, platform, reportId, testId, instanceId } = details;
 
-    const currentJobReport = await jobsReportService.getJobReport(reportId);
+	const currentJobReport = await jobsReportService.getJobReport(reportId);
 
-    const testInstance = await testInstanceService.getTestInstance(instanceId);
-    const referenceInstance = getReferenceInstance(currentJobReport.reference_job_id, testId, platform);
+	const testInstance = await testInstanceService.getTestInstance(instanceId);
+	const referenceInstance = getReferenceInstance(currentJobReport.reference_job_id, testId, platform);
 
-    // Create result set for this config
-    const { insertId: resultSetId } = await testInstanceResultSetsService.createResultSet({
+	// Create result set for this config
+	const { insertId: resultSetId } = await testInstanceResultSetsService.createResultSet({
 		instance_id: instanceId,
 		target_instance_id: referenceInstance ? referenceInstance.id : instanceId,
 		report_id: reportId,
 		status: TestInstanceResultSetStatus.RUNNING_CHECKS,
 	});
 
-    const testInstanceWithImages = await getOrganisedTestInstanceWithImages(testInstance);
-    const referenceInstanceWithImages = await getOrganisedTestInstanceWithImages(referenceInstance);
-    console.log("Reference instance is", testInstanceWithImages, referenceInstanceWithImages);
+	const testInstanceWithImages = await getOrganisedTestInstanceWithImages(testInstance);
+	const referenceInstanceWithImages = await getOrganisedTestInstanceWithImages(referenceInstance);
+	console.log("Reference instance is", testInstanceWithImages, referenceInstanceWithImages);
 
-    await testInstanceResultSetsService.updateResultSetStatus(resultSetId, error);
+	await testInstanceResultSetsService.updateResultSetStatus(resultSetId, error);
 }
 
 module.exports = async (bullJob: Job) => {
@@ -233,18 +227,18 @@ module.exports = async (bullJob: Job) => {
 			const completedTestsCount = parseInt(await reddisClient.get(`${jobId}:completed`));
 
 			await runChecks({
-                error,
-                githubInstallationId,
-                githubCheckRunId,
-                totalTestCount,
-                screenshots,
-                testId,
-                jobId,
-                instanceId,
-                reportId,
-                fullRepoName,
-                platform,
-            });
+				error,
+				githubInstallationId,
+				githubCheckRunId,
+				totalTestCount,
+				screenshots,
+				testId,
+				jobId,
+				instanceId,
+				reportId,
+				fullRepoName,
+				platform,
+			});
 
 			console.log("Cleaning up now", completedTestsCount, totalTestCount);
 			if (completedTestsCount === totalTestCount) {

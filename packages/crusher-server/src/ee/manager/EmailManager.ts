@@ -49,9 +49,7 @@ export class EmailManager {
 	}
 
 	public static sendInvitations(members: string[], inviteReferral: iInviteReferral, metaInfo: { orgName: string; adminName: string }) {
-		const {
-            adminName
-        } = metaInfo;
+		const { adminName } = metaInfo;
 		return new Promise((resolve, reject) => {
 			const inviteLinkUrl = new URL(resolvePathToFrontendURI(`/get-started`));
 			inviteLinkUrl.searchParams.append("inviteType", inviteReferral.type);

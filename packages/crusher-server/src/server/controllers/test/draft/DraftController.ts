@@ -1,4 +1,4 @@
-import {JsonController, Get, Authorized, CurrentUser, Body, Post, Param, BadRequestError} from "routing-controllers";
+import { JsonController, Get, Authorized, CurrentUser, Body, Post, Param, BadRequestError } from "routing-controllers";
 import { Service, Container, Inject } from "typedi";
 import DBManager from "../../core/manager/DBManager";
 import UserService from "../../core/services/UserService";
@@ -15,6 +15,7 @@ import { InstanceStatus } from "../../core/interfaces/InstanceStatus";
 import DraftInstanceResultsService from "../../core/services/DraftInstanceResultsService";
 import TestInstanceRecordingService from "../../core/services/TestInstanceRecordingService";
 import { TestLiveStepsLogs } from "../models/testLiveStepsLogs";
+import { DRAFT_LOGS_STATUS, iDraftLogsResponse } from "@crusher-shared/types/response/draftLogsResponse";
 
 @Service()
 @JsonController("/draft")
@@ -44,8 +45,8 @@ export class DraftController {
 	@Authorized()
 	@Get("/get/:draftId")
 	async getTest(@CurrentUser({ required: true }) user, @Param("draftId") draftId) {
-        return this.draftService.getDraftTest(draftId);
-    }
+		return this.draftService.getDraftTest(draftId);
+	}
 
 	@Authorized()
 	@Post("/createAndRun")
@@ -75,8 +76,46 @@ export class DraftController {
 	}
 
 	@Authorized()
-    @Post("/getLastInstanceStatus/:draftId")
-    async getStatus(@CurrentUser({ required: true }) user: iUser, @Param("draftId") draftId: number, @Body() body) {
+	@Post("/getLogs/:draftId")
+	async getStatus(@CurrentUser({ required: true }) user: iUser, @Param("draftId") draftId: number, @Body() body): Promise<iDraftLogsResponse | unknown> {
+		const { logsAfter } = body;
+		let count = 0;
+		const lastInstance = await this.draftInstanceService.getRecentDraftInstance(draftId);
+		if (!lastInstance) {
+			throw new BadRequestError();
+		}
+
+		return new Promise((resolve, reject) => {
+			try {
+				const interval = setInterval(async () => {
+					const testStatus = await this.draftV2Service.getDraftInstanceStatus(lastInstance.id);
+
+					return this.draftV2Service
+						.getDraftLogs(draftId, logsAfter)
+						.then((logs) => {
+							resolve({
+								status: DRAFT_LOGS_STATUS.UPDATE_LOGS,
+								logs: logs,
+								test: testStatus,
+							});
+							clearInterval(interval);
+						})
+						.catch(() => {
+							if (count++ === 5) {
+								resolve({ status: DRAFT_LOGS_STATUS.NO_UPDATE, test: testStatus });
+								clearInterval(interval);
+							}
+						});
+				}, 1000);
+			} catch (er) {
+				reject(er);
+			}
+		});
+	}
+
+	@Authorized()
+	@Post("/getLastInstanceStatus/:draftId")
+	async getStatus(@CurrentUser({ required: true }) user: iUser, @Param("draftId") draftId: number, @Body() body) {
 		const { logsAfter } = body;
 		let count = 0;
 		const lastInstance = await this.draftInstanceService.getRecentDraftInstance(draftId);

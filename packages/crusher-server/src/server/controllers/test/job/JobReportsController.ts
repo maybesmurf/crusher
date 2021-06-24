@@ -1,11 +1,11 @@
 import { Inject, Service } from "typedi";
-import {Get, Post, JsonController, Param, QueryParams} from "routing-controllers";
-import JobReportServiceV2 from "../../../core/services/v2/JobReportServiceV2";
-import CommentsServiceV2 from "../../../core/services/v2/CommentsServiceV2";
-import TestInstanceV2Service from "../../../core/services/v2/TestInstanceV2Service";
-import TestInstanceResultsV2 from "../../../core/services/v2/TestInstanceResultsV2";
-import JobsService from "../../../core/services/JobsService";
-import { JobTrigger } from "../../../core/interfaces/JobTrigger";
+import { Get, Post, JsonController, Param, QueryParams } from "routing-controllers";
+import JobReportServiceV2 from "../../core/services/v2/JobReportServiceV2";
+import CommentsServiceV2 from "../../core/services/v2/CommentsServiceV2";
+import TestInstanceV2Service from "../../core/services/v2/TestInstanceV2Service";
+import TestInstanceResultsV2 from "../../core/services/v2/TestInstanceResultsV2";
+import JobsService from "../../core/services/JobsService";
+import { JobTrigger } from "../../core/interfaces/JobTrigger";
 
 @Service()
 @JsonController("/v2/job/report")
@@ -26,31 +26,25 @@ export class JobReportsController {
 	private jobsService: JobsService;
 
 	@Post("/")
-    async createJobReport() {}
+	async createJobReport() {}
 
 	@Get("/list/:projectId")
 	async getJobReportsInProject(@Param("projectId") projectId: number, @QueryParams() queries) {
-        let { page, category, itemsPerPage } = queries;
-        if (!((page && !isNaN(page) && page >= 1)))
-            page = 1;
-        let trigger = null;
-        if (parseInt(category) === 1) {
+		let { page, category, itemsPerPage } = queries;
+		if (!(page && !isNaN(page) && page >= 1)) page = 1;
+		let trigger = null;
+		if (parseInt(category) === 1) {
 			trigger = JobTrigger.MONITORING;
 		} else if (parseInt(category) === 2) {
 			trigger = JobTrigger.MANUAL;
 		}
-        const totalCountRecord = await this.jobReportsService.getTotalJobsReportsCountInProject(projectId, trigger);
+		const totalCountRecord = await this.jobReportsService.getTotalJobsReportsCountInProject(projectId, trigger);
 
-        const reports = await this.jobReportsService.getAllJobReportsInProjectPage(
-			projectId,
-			trigger,
-			itemsPerPage || 5,
-			(page - 1) * ((itemsPerPage || 5)),
-		);
+		const reports = await this.jobReportsService.getAllJobReportsInProjectPage(projectId, trigger, itemsPerPage || 5, (page - 1) * (itemsPerPage || 5));
 
-        for (let i = 0; i < reports.length; i++) {
-            reports[i].screenshotCount = await this.jobsService.getTotalScreenshotsInJob(reports[i].jobId);
-            if (reports[i].referenceJobId) {
+		for (let i = 0; i < reports.length; i++) {
+			reports[i].screenshotCount = await this.jobsService.getTotalScreenshotsInJob(reports[i].jobId);
+			if (reports[i].referenceJobId) {
 				const comparisonScreenshotsCount = await this.jobsService.getScreenshotsCountInJobReport(reports[i].reportId, reports[i].jobId);
 				reports[i] = {
 					...reports[i],
@@ -67,15 +61,15 @@ export class JobReportsController {
 					reviewRequiredScreenshotCount: 0,
 				};
 			}
-        }
+		}
 
-        return {
+		return {
 			jobs: reports,
 			category: category,
 			trigger: trigger,
 			totalPages: Math.ceil(totalCountRecord.totalCount / 5),
 		};
-    }
+	}
 
 	@Get("/:reportId")
 	async getJobReport(@Param("reportId") reportId: number) {

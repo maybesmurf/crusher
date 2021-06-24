@@ -1,4 +1,4 @@
-import {Container, Service} from "typedi";
+import { Container, Service } from "typedi";
 import DBManager from "../manager/DBManager";
 import { TestInstanceRecording } from "../interfaces/db/TestInstanceRecording";
 

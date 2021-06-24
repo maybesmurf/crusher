@@ -1,9 +1,9 @@
 import { JsonController, Get, Authorized, CurrentUser, Body, Post, Param, UnauthorizedError } from "routing-controllers";
 import { Service, Container, Inject } from "typedi";
-import DBManager from "../../core/manager/DBManager";
-import UserService from "../../core/services/UserService";
-import ProjectHostsService from "../../core/services/ProjectHostsService";
-import ProjectService from "../../core/services/ProjectService";
+import DBManager from "../../../core/manager/DBManager";
+import UserService from "../../../core/services/UserService";
+import ProjectHostsService from "../../../core/services/ProjectHostsService";
+import ProjectService from "../../../core/services/ProjectService";
 import { iHostListResponse } from "@crusher-shared/types/response/hostListResponse";
 
 @Service()

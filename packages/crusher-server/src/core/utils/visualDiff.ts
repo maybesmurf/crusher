@@ -2,9 +2,7 @@
 /* eslint-disable no-await-in-loop */
 import { Logger } from "../../utils/logger";
 
-const {
-    PNG
-} = require("pngjs");
+const { PNG } = require("pngjs");
 const pixelmatch = require("pixelmatch");
 const axios = require("axios");
 

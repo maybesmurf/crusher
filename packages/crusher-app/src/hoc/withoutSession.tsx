@@ -37,7 +37,7 @@ function withoutSession(WrappedComponent: NextPage | NextComponentType<NextPageC
 			await redirectToFrontendPath("/app/project/dashboard", res as NextApiResponse);
 			return;
 		} else if (getEdition() === EDITION_TYPE.OPEN_SOURCE) {
-			await redirectToBackendURI("/v2/user/init", res as NextApiResponse);
+			await redirectToBackendURI("/user/init", res as NextApiResponse);
 			return;
 		}
 

@@ -1,15 +1,15 @@
 import { Authorized, Body, CurrentUser, Get, JsonController, Param, Post, UnauthorizedError } from "routing-controllers";
 import { Container, Inject, Service } from "typedi";
-import DBManager from "../../core/manager/DBManager";
-import UserService from "../../core/services/UserService";
-import MonitoringService from "../../core/services/MonitoringService";
-import { convertLabelToSeconds, convertSecondsToLabel } from "../../core/utils/helper";
-import { Platform } from "../../core/interfaces/Platform";
-import { iAddMonitoringRequest } from "../../../../crusher-shared/types/request/addMonitoringRequest";
-import { iMonitoringListResponse } from "../../../../crusher-shared/types/response/monitoringListResponse";
-import ProjectHostsService from "../../core/services/ProjectHostsService";
-import JobRunnerService from "../../core/services/v2/JobRunnerService";
-import { JOB_TRIGGER } from "../../../../crusher-shared/types/jobTrigger";
+import DBManager from "../../../core/manager/DBManager";
+import UserService from "../../../core/services/UserService";
+import MonitoringService from "../../../core/services/MonitoringService";
+import { convertLabelToSeconds, convertSecondsToLabel } from "../../../core/utils/helper";
+import { Platform } from "../../../core/interfaces/Platform";
+import { iAddMonitoringRequest } from "../../../../../crusher-shared/types/request/addMonitoringRequest";
+import { iMonitoringListResponse } from "../../../../../crusher-shared/types/response/monitoringListResponse";
+import ProjectHostsService from "../../../core/services/ProjectHostsService";
+import JobRunnerService from "../../../core/services/v2/JobRunnerService";
+import { JOB_TRIGGER } from "../../../../../crusher-shared/types/jobTrigger";
 
 @Service()
 @JsonController("/monitoring")
@@ -34,10 +34,7 @@ export class MonitoringController {
 	@Post("/add/:projectId")
 	async addMonitoring(@CurrentUser({ required: true }) user, @Param("projectId") projectId: number, @Body() body: iAddMonitoringRequest) {
 		const { user_id } = user;
-		const {
-            host,
-            interval
-        } = body;
+		const { host, interval } = body;
 
 		return this.monitoringService.addMonitoringForProject(
 			{

@@ -19,9 +19,7 @@ export class InviteMembersController {
 	@Authorized()
 	@Get("/project/link/:projectId")
 	async getProjectInviteLink(@CurrentUser({ required: true }) user, @Param("projectId") projectId: number) {
-		const {
-            team_id
-        } = user;
+		const { team_id } = user;
 		const inviteLink = await this.inviteMembersService.getPublicProjectInviteCode(projectId, team_id, null);
 
 		return inviteLink;

@@ -112,7 +112,7 @@ function Home() {
 					<div css={styles.requestButton} onClick={handleLogin} className={"font-medium button"}>
 						Next
 					</div>
-					<a href={resolvePathToBackendURI("/v2/user/authenticate/google")} target={isIFrame ? "_blank" : "_self"} css={styles.loginGoogleLink}>
+					<a href={resolvePathToBackendURI("/user/authenticate/google")} target={isIFrame ? "_blank" : "_self"} css={styles.loginGoogleLink}>
 						<div css={styles.googleLoginButton(theme)}>
 							<GoogleIcon width={"1.5rem"} height={"1.44rem"} />
 							<span className={"font-medium button"} style={{ marginLeft: 12 }}>

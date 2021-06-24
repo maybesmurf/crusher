@@ -9,7 +9,7 @@ export const getVisualDiffsJob = (jobId, headers = null) => {
 };
 
 export const getAllJobsOfProject = (projectId, category = 0, page = 1, headers = null) => {
-	return backendRequest(`/v2/job/report/list/${projectId}`, {
+	return backendRequest(`/job/report/list/${projectId}`, {
 		method: RequestMethod.GET,
 		headers: headers,
 		payload: { page: page || 1, category },

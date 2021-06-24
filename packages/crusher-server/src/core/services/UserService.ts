@@ -159,12 +159,14 @@ export default class UserService {
 				verified: true,
 				password: encryptPassword(password),
 			});
-			const teamId = referralTeamId || (
-						await this.teamService.createTeam({
-							teamName: "Default",
-							userId: inserted_user.insertId,
-						})
-				  ).teamId;
+			const teamId =
+				referralTeamId ||
+				(
+					await this.teamService.createTeam({
+						teamName: "Default",
+						userId: inserted_user.insertId,
+					})
+				).teamId;
 			const projectId = referralProjectId || (await this.projectService.createDefaultProject(teamId)).insertId;
 
 			const user_id = inserted_user.insertId;

@@ -6,7 +6,7 @@ import { linkGithubRepoResponse } from "@crusher-shared/types/response/linkGithu
 import { iGithubLinkedReposListResponse } from "@crusher-shared/types/response/githubLinkedReposListResponse";
 
 export const _getUserConnectionsList = (headers: any = null): Promise<iListOfUserLoginConnectionsResponse> => {
-	return backendRequest("/v2/user/connection/get", {
+	return backendRequest("/user/connection/get", {
 		method: RequestMethod.GET,
 		headers: headers,
 	});
