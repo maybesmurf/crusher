@@ -65,7 +65,11 @@ const CrusherOnboarding = () => {
 					key: USER_META_KEYS.INITIAL_ONBOARDING,
 					value: true,
 				});
-				window.location.href = "/";
+
+				// Add timeout so that the user meta request is complete
+				setTimeout(() => {
+					window.location.href = "/";
+				},1000);
 			}
 		}, 5000);
 
